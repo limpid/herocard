@@ -186,8 +186,9 @@
 
   const sideNavLinks = Array.from(document.querySelectorAll('.side-nav a'));
   const groupSections = Array.from(document.querySelectorAll('.home-group'));
+  const groupNames = sideNavLinks.map((link) => link.dataset.group);
 
-  function showGroup(name) {
+  function showGroup(name, updateHash) {
     groupSections.forEach((section) => {
       section.classList.toggle('is-hidden', section.dataset.group !== name);
     });
@@ -200,16 +201,20 @@
         link.removeAttribute('aria-current');
       }
     });
+    if (updateHash && location.hash !== `#${name}`) {
+      history.replaceState(null, '', `#${name}`);
+    }
   }
 
   sideNavLinks.forEach((link) => {
     link.addEventListener('click', (event) => {
       event.preventDefault();
-      showGroup(link.dataset.group);
+      showGroup(link.dataset.group, true);
     });
   });
 
-  showGroup('single');
+  const initialGroup = (location.hash || '').replace('#', '');
+  showGroup(groupNames.includes(initialGroup) ? initialGroup : 'single');
 
   function renderAll() {
     renderSingle('classic');
