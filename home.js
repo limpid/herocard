@@ -85,6 +85,24 @@
   function createTabGroup(options) {
     const ctx = options.canvas.getContext('2d');
 
+    function readStoredKey() {
+      try {
+        const stored = window.localStorage.getItem(options.storageKey);
+        if (stored && options.registry[stored]) return stored;
+      } catch (error) {
+        return null;
+      }
+      return null;
+    }
+
+    function saveStoredKey(key) {
+      try {
+        window.localStorage.setItem(options.storageKey, key);
+      } catch (error) {
+        /* localStorage 不可用时忽略 */
+      }
+    }
+
     function render(key) {
       const template = options.registry[key];
       if (!template) return;
@@ -105,6 +123,7 @@
       options.taglineEl.textContent = template.tagline;
       options.indexEl.textContent = `${options.prefix} · ${String(index + 1).padStart(2, '0')}`;
       options.ctaEl.href = `${options.base}${template.file}`;
+      saveStoredKey(key);
     }
 
     function selectTab(tab) {
@@ -129,10 +148,20 @@
       });
     });
 
-    return render;
+    function restore(fallbackKey) {
+      const key = readStoredKey() || fallbackKey;
+      const tab = options.tabs.find((item) => (item.dataset.template || item.dataset.compare || item.dataset.quote || item.dataset.batch) === key);
+      if (tab) {
+        selectTab(tab);
+      } else {
+        render(fallbackKey);
+      }
+    }
+
+    return { render, restore };
   }
 
-  const renderSingle = createTabGroup({
+  const singleGroup = createTabGroup({
     tabs: Array.from(document.querySelectorAll('#template-tabs [role="tab"]')),
     canvas: document.getElementById('previewCanvas'),
     nameEl: document.getElementById('templateName'),
@@ -142,10 +171,11 @@
     registry: window.CARD_TEMPLATES,
     sample: singleSample,
     prefix: 'TEMPLATE',
-    base: 'templates/'
+    base: 'templates/',
+    storageKey: 'herocard-tab-single'
   });
 
-  const renderCompare = createTabGroup({
+  const compareGroup = createTabGroup({
     tabs: Array.from(document.querySelectorAll('#compare-tabs [role="tab"]')),
     canvas: document.getElementById('compareCanvas'),
     nameEl: document.getElementById('compareName'),
@@ -155,10 +185,11 @@
     registry: window.COMPARE_TEMPLATES,
     sample: compareSample,
     prefix: 'COMPARE',
-    base: 'compare/'
+    base: 'compare/',
+    storageKey: 'herocard-tab-compare'
   });
 
-  const renderQuote = createTabGroup({
+  const quoteGroup = createTabGroup({
     tabs: Array.from(document.querySelectorAll('#quote-tabs [role="tab"]')),
     canvas: document.getElementById('quoteCanvas'),
     nameEl: document.getElementById('quoteName'),
@@ -168,10 +199,11 @@
     registry: window.QUOTE_TEMPLATES,
     sample: quoteSample,
     prefix: 'QUOTE',
-    base: 'quote/'
+    base: 'quote/',
+    storageKey: 'herocard-tab-quote'
   });
 
-  const renderBatch = createTabGroup({
+  const batchGroup = createTabGroup({
     tabs: Array.from(document.querySelectorAll('#batch-tabs [role="tab"]')),
     canvas: document.getElementById('batchCanvas'),
     nameEl: document.getElementById('batchName'),
@@ -181,7 +213,8 @@
     registry: window.BATCH_TEMPLATES,
     sample: batchSample,
     prefix: 'BATCH',
-    base: 'batch/'
+    base: 'batch/',
+    storageKey: 'herocard-tab-batch'
   });
 
   const sideNavLinks = Array.from(document.querySelectorAll('.side-nav a'));
@@ -217,10 +250,10 @@
   showGroup(groupNames.includes(initialGroup) ? initialGroup : 'single');
 
   function renderAll() {
-    renderSingle('classic');
-    renderCompare('split-vs');
-    renderQuote('price-list');
-    renderBatch('classic-table');
+    singleGroup.restore('classic');
+    compareGroup.restore('split-vs');
+    quoteGroup.restore('price-list');
+    batchGroup.restore('classic-table');
   }
 
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(renderAll);

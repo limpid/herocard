@@ -100,7 +100,7 @@
           </section>
         </section>
 
-        <section id="group-compare" class="home-group" data-group="compare">
+        <section id="group-compare" class="home-group is-hidden" data-group="compare">
           <div class="group-heading">
             <div class="eyebrow">COMPARE GALLERY</div>
             <h2>明星对比模板</h2>
@@ -198,7 +198,7 @@
           </section>
         </section>
 
-        <section id="group-batch" class="home-group" data-group="batch">
+        <section id="group-batch" class="home-group is-hidden" data-group="batch">
           <div class="group-heading">
             <div class="eyebrow">BATCH GALLERY</div>
             <h2>批量报价模板</h2>
@@ -248,6 +248,25 @@
         </section>
       </div>
     </div>
+    <script>
+      (function () {
+        var hash = (location.hash || '').replace('#', '');
+        if (!hash) return;
+        var groups = document.querySelectorAll('.home-group');
+        var target = null;
+        for (var i = 0; i < groups.length; i += 1) {
+          if (groups[i].getAttribute('data-group') === hash) target = groups[i];
+        }
+        if (!target) return;
+        for (var j = 0; j < groups.length; j += 1) groups[j].classList.add('is-hidden');
+        target.classList.remove('is-hidden');
+        var links = document.querySelectorAll('.side-nav a');
+        for (var k = 0; k < links.length; k += 1) {
+          var active = links[k].getAttribute('data-group') === hash;
+          links[k].classList[active ? 'add' : 'remove']('is-active');
+        }
+      })();
+    </script>
   </main>
 
   <script src="js/renderers.js"></script>
@@ -281,6 +300,6 @@
   <script src="batch/b08-banner-table.js"></script>
   <script src="batch/b09-glass-table.js"></script>
   <script src="batch/b10-ink-table.js"></script>
-  <script src="home.js?v=2"></script>
+  <script src="home.js?v=3"></script>
 </body>
 </html>
