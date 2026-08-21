@@ -172,11 +172,10 @@
     const template = window.COMPARE_TEMPLATES[templateKey];
     const safeA = (elements.nameA.value.trim() || 'A').replace(/[\\/:*?"<>|]/g, '-');
     const safeB = (elements.nameB.value.trim() || 'B').replace(/[\\/:*?"<>|]/g, '-');
-    const link = document.createElement('a');
-    link.download = `${safeA}-vs-${safeB}-${template ? template.name : '对比'}.png`;
-    link.href = canvas.toDataURL('image/png', 1);
-    link.click();
-    showToast('高清对比卡片已下载');
+    window.saveCanvasImage(canvas, `${safeA}-vs-${safeB}-${template ? template.name : '对比'}.png`, {
+      desktop: '高清对比卡片已下载',
+      mobile: '长按图片即可保存到相册'
+    });
   }
 
   function resetForm() {

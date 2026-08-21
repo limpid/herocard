@@ -133,11 +133,10 @@
     renderCard();
     const template = window.BATCH_TEMPLATES[templateKey];
     const safeTitle = (elements.title.value.trim() || '批量报价').replace(/[\\/:*?"<>|]/g, '-');
-    const link = document.createElement('a');
-    link.download = `${safeTitle}-${template ? template.name : ''}.png`;
-    link.href = canvas.toDataURL('image/png', 1);
-    link.click();
-    showToast('高清批量报价表已下载');
+    window.saveCanvasImage(canvas, `${safeTitle}-${template ? template.name : ''}.png`, {
+      desktop: '高清批量报价表已下载',
+      mobile: '长按图片即可保存到相册'
+    });
   }
 
   function resetForm() {

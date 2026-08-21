@@ -160,11 +160,10 @@
     renderCard();
     const safeName = (elements.name.value.trim() || '人物').replace(/[\\/:*?"<>|]/g, '-');
     const templateName = currentTemplate ? currentTemplate.name : '卡片';
-    const link = document.createElement('a');
-    link.download = `${safeName}-${templateName}.png`;
-    link.href = canvas.toDataURL('image/png', 1);
-    link.click();
-    showToast('高清卡片已下载');
+    window.saveCanvasImage(canvas, `${safeName}-${templateName}.png`, {
+      desktop: '高清卡片已下载',
+      mobile: '长按图片即可保存到相册'
+    });
   }
 
   function resetForm() {

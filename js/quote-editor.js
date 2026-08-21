@@ -159,11 +159,10 @@
     renderCard();
     const template = window.QUOTE_TEMPLATES[templateKey];
     const safeName = (elements.name.value.trim() || '明星').replace(/[\\/:*?"<>|]/g, '-');
-    const link = document.createElement('a');
-    link.download = `${safeName}-报价单-${template ? template.name : ''}.png`;
-    link.href = canvas.toDataURL('image/png', 1);
-    link.click();
-    showToast('高清报价单已下载');
+    window.saveCanvasImage(canvas, `${safeName}-报价单-${template ? template.name : ''}.png`, {
+      desktop: '高清报价单已下载',
+      mobile: '长按图片即可保存到相册'
+    });
   }
 
   function resetForm() {
