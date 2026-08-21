@@ -254,6 +254,7 @@
     compareGroup.restore('split-vs');
     quoteGroup.restore('price-list');
     batchGroup.restore('classic-table');
+    document.body.classList.remove('js-loading');
   }
 
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(renderAll);

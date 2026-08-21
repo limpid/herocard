@@ -251,20 +251,51 @@
     <script>
       (function () {
         var hash = (location.hash || '').replace('#', '');
-        if (!hash) return;
         var groups = document.querySelectorAll('.home-group');
         var target = null;
-        for (var i = 0; i < groups.length; i += 1) {
-          if (groups[i].getAttribute('data-group') === hash) target = groups[i];
+        if (hash) {
+          for (var i = 0; i < groups.length; i += 1) {
+            if (groups[i].getAttribute('data-group') === hash) target = groups[i];
+          }
         }
-        if (!target) return;
-        for (var j = 0; j < groups.length; j += 1) groups[j].classList.add('is-hidden');
-        target.classList.remove('is-hidden');
+        var currentGroup = target ? target.getAttribute('data-group') : 'single';
+        if (target) {
+          for (var j = 0; j < groups.length; j += 1) groups[j].classList.add('is-hidden');
+          target.classList.remove('is-hidden');
+        }
         var links = document.querySelectorAll('.side-nav a');
         for (var k = 0; k < links.length; k += 1) {
-          var active = links[k].getAttribute('data-group') === hash;
+          var active = links[k].getAttribute('data-group') === currentGroup;
           links[k].classList[active ? 'add' : 'remove']('is-active');
         }
+
+        var storageMap = [
+          ['template-tabs', 'herocard-tab-single'],
+          ['compare-tabs', 'herocard-tab-compare'],
+          ['quote-tabs', 'herocard-tab-quote'],
+          ['batch-tabs', 'herocard-tab-batch']
+        ];
+        storageMap.forEach(function (pair) {
+          var storedKey = null;
+          try { storedKey = window.localStorage.getItem(pair[1]); } catch (error) { return; }
+          if (!storedKey) return;
+          var tabs = document.querySelectorAll('#' + pair[0] + ' [role="tab"]');
+          var matched = null;
+          for (var t = 0; t < tabs.length; t += 1) {
+            var key = tabs[t].getAttribute('data-template') || tabs[t].getAttribute('data-compare') || tabs[t].getAttribute('data-quote') || tabs[t].getAttribute('data-batch');
+            if (key === storedKey) matched = tabs[t];
+          }
+          if (!matched) return;
+          for (var u = 0; u < tabs.length; u += 1) {
+            var on = tabs[u] === matched;
+            tabs[u].classList[on ? 'add' : 'remove']('is-active');
+            tabs[u].setAttribute('aria-selected', String(on));
+            tabs[u].tabIndex = on ? 0 : -1;
+          }
+        });
+
+        document.body.classList.add('js-loading');
+        setTimeout(function () { document.body.classList.remove('js-loading'); }, 3000);
       })();
     </script>
   </main>
@@ -300,6 +331,6 @@
   <script src="batch/b08-banner-table.js"></script>
   <script src="batch/b09-glass-table.js"></script>
   <script src="batch/b10-ink-table.js"></script>
-  <script src="home.js?v=3"></script>
+  <script src="home.js?v=4"></script>
 </body>
 </html>

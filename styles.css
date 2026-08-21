@@ -243,7 +243,8 @@ button:focus-visible, label:focus-within, input:focus-visible, textarea:focus-vi
 .tab:hover { color: var(--primary); background: var(--primary-soft); }
 .tab.is-active { color: #fff; background: linear-gradient(135deg, #7b76ed, #5d58db); box-shadow: 0 6px 16px rgba(90, 84, 216, 0.25); }
 
-.showcase { display: grid; grid-template-columns: 430px minmax(0, 1fr); gap: 34px; align-items: start; }
+.showcase { display: grid; grid-template-columns: 430px minmax(0, 1fr); gap: 34px; align-items: start; transition: opacity 200ms ease; }
+body.js-loading .showcase { opacity: 0; }
 .showcase-info { padding-top: 6px; }
 .showcase-info h2 { margin: 10px 0 8px; font-size: 34px; letter-spacing: -0.03em; }
 .showcase-info > p { color: var(--text-secondary); }
