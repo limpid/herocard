@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="档案编号风格的人物介绍卡片模板，上传照片、填写文字，一键生成高清卡片。">
+  <title>档案编号 · 人物卡片生成器</title>
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body data-template="dossier">
+  <a class="skip-link" href="#editor">跳到编辑区</a>
+  <header class="site-header">
+    <a class="brand" href="../index.html" aria-label="返回模板主页">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M6.8 4.5h10.4A2.3 2.3 0 0 1 19.5 6.8v10.4a2.3 2.3 0 0 1-2.3 2.3H6.8a2.3 2.3 0 0 1-2.3-2.3V6.8a2.3 2.3 0 0 1 2.3-2.3Z"/><circle cx="12" cy="10" r="2.5"/><path d="M7.8 17c.8-2.2 2.2-3.3 4.2-3.3s3.4 1.1 4.2 3.3"/></svg>
+      </span>
+      <span>人物卡片</span>
+    </a>
+    <div class="header-side">
+      <a class="back-link" href="../index.html">← 返回模板主页</a>
+      <span class="header-note">本地生成 · 图片不上传服务器</span>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <section class="intro intro-compact" aria-labelledby="page-title">
+      <div class="eyebrow">TEMPLATE · 10</div>
+      <h1 id="page-title">档案编号</h1>
+      <p>档案卡式信息陈列，冷静专业</p>
+    </section>
+
+    <div class="workspace">
+      <section class="editor-panel" id="editor" aria-labelledby="editor-title">
+        <div class="panel-heading">
+          <div>
+            <span class="step-label">编辑内容</span>
+            <h2 id="editor-title">完善卡片信息</h2>
+          </div>
+          <button class="text-button" type="button" id="resetButton">恢复示例</button>
+        </div>
+
+        <div class="form-section">
+          <div class="section-title"><span>01</span><h3>人物照片</h3></div>
+          <label class="upload-zone" id="uploadZone" for="photoInput">
+            <input id="photoInput" type="file" accept="image/jpeg,image/png,image/webp" hidden>
+            <span class="upload-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5M5 14v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/></svg>
+            </span>
+            <span class="upload-copy"><strong id="uploadTitle">点击或拖拽上传照片</strong><small>支持 JPG、PNG、WebP，建议使用竖版高清图</small></span>
+            <span class="upload-action">选择图片</span>
+          </label>
+          <div class="photo-controls">
+            <div class="control-heading">
+              <span>画面调整</span>
+              <button class="mini-button" type="button" id="smartFitButton">智能适配</button>
+            </div>
+            <div class="range-row">
+              <label for="photoZoom">人物缩放 <output id="photoZoomValue" for="photoZoom">100%</output></label>
+              <input id="photoZoom" type="range" min="75" max="200" value="100" aria-describedby="photoAdjustHint">
+            </div>
+            <div class="range-row">
+              <label for="photoPositionX">水平位置</label>
+              <input id="photoPositionX" type="range" min="0" max="100" value="50">
+            </div>
+            <div class="range-row">
+              <label for="photoPosition">垂直位置</label>
+              <input id="photoPosition" type="range" min="0" max="100" value="35">
+            </div>
+            <small class="control-hint" id="photoAdjustHint">缩小到 100% 以下时，会用柔化背景自然填充空白。</small>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="section-title"><span>02</span><h3>基础信息</h3></div>
+          <div class="field-grid">
+            <div class="field">
+              <div class="label-row">
+                <label for="nameInput">人物名称</label>
+                <span class="char-count" data-count-for="nameInput"></span>
+              </div>
+              <input id="nameInput" type="text" value="林知夏" maxlength="12">
+            </div>
+            <div class="field">
+              <div class="label-row">
+                <label for="roleInput">身份标签</label>
+                <span class="char-count" data-count-for="roleInput"></span>
+              </div>
+              <input id="roleInput" type="text" value="生活方式创作者" maxlength="18">
+            </div>
+            <div class="field field-wide">
+              <div class="label-row">
+                <label for="priceInput">重点信息</label>
+                <span class="char-count" data-count-for="priceInput"></span>
+              </div>
+              <input id="priceInput" type="text" value="合作预算：8万起" maxlength="24">
+              <small>卡片中将使用强调色展示</small>
+            </div>
+            <div class="field field-wide">
+              <div class="label-row">
+                <label for="contactInput">联系方式</label>
+                <span class="char-count" data-count-for="contactInput"></span>
+              </div>
+              <input id="contactInput" type="text" value="" maxlength="30" placeholder="例如：商务合作 微信 StarBiz">
+              <small>卡片上的合作联系入口，建议填写经纪人微信或邮箱</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="section-title"><span>03</span><h3>文字介绍</h3></div>
+          <div class="field">
+            <div class="label-row">
+              <label for="tipInput">提示语</label>
+              <span class="char-count" data-count-for="tipInput"></span>
+            </div>
+            <input id="tipInput" type="text" value="合作报价仅供参考，具体以沟通方案为准" maxlength="38">
+          </div>
+          <div class="field">
+            <div class="label-row">
+              <label for="bioInput">人物介绍</label>
+              <span class="char-count" id="bioCount" data-count-for="bioInput"></span>
+            </div>
+            <textarea id="bioInput" rows="6">林知夏，独立生活方式创作者与视觉策划人。长期关注城市生活、美学空间与女性成长，擅长以温柔细腻的内容语言连接品牌与受众。曾与多个生活方式、家居及旅行品牌合作，作品兼具真实体验与审美表达。</textarea>
+            <small>内容超出卡片可显示范围时会截断显示，计数器将同步提醒</small>
+          </div>
+          <div class="field">
+            <div class="label-row">
+              <label for="footerInput">底部说明</label>
+              <span class="char-count" data-count-for="footerInput"></span>
+            </div>
+            <input id="footerInput" type="text" value="明确合作类型、城市、时间与预算" maxlength="30">
+          </div>
+        </div>
+
+        <div class="form-section compact-section">
+          <div class="section-title"><span>04</span><h3>样式与尺寸</h3></div>
+          <div class="field-grid">
+            <div class="field">
+              <label for="themeSelect">卡片配色</label>
+              <select id="themeSelect">
+                <option value="lavender">雾霭紫</option>
+                <option value="peach">暖杏橙</option>
+                <option value="mint">静谧绿</option>
+                <option value="midnight">深海蓝</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="sizeSelect">导出尺寸</label>
+              <select id="sizeSelect">
+                <option value="900x1200">900 × 1200</option>
+                <option value="1080x1440" selected>1080 × 1440</option>
+                <option value="1350x1800">1350 × 1800</option>
+              </select>
+            </div>
+            <div class="field field-wide">
+              <div class="label-row">
+                <label for="watermarkInput">水印文字</label>
+                <span class="char-count" data-count-for="watermarkInput"></span>
+              </div>
+              <input id="watermarkInput" type="text" value="" maxlength="20" placeholder="例如：仅供合作查阅">
+              <small>斜向平铺覆盖整张卡片，留空则不显示</small>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="preview-column" aria-labelledby="preview-title">
+        <div class="preview-toolbar">
+          <div>
+            <span class="live-dot" aria-hidden="true"></span>
+            <span id="preview-title">实时预览</span>
+          </div>
+          <span id="sizeBadge">1080 × 1440 px</span>
+        </div>
+        <div class="canvas-stage">
+          <canvas id="cardCanvas" width="1080" height="1440" aria-label="人物介绍卡片实时预览"></canvas>
+        </div>
+        <button class="download-button" type="button" id="downloadButton">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v11m0 0 4-4m-4 4-4-4M5 19.5h14"/></svg>
+          <span>下载高清 PNG</span>
+        </button>
+        <p class="privacy-note">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 10V7a4 4 0 0 1 8 0v3m-9 0h10a1 1 0 0 1 1 1v8H6v-8a1 1 0 0 1 1-1Z"/></svg>
+          你的图片只在本地浏览器中处理
+        </p>
+      </aside>
+    </div>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">卡片已下载</div>
+  <script src="../js/renderers.js"></script>
+  <script src="../js/editor.js"></script>
+</body>
+</html>

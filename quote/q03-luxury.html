@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="奢华拱窗风格的明星报价卡片模板，突出明星照片与四项报价明细，用于明星中介对外报价。">
+  <title>奢华拱窗 · 明星报价卡片</title>
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body data-quote="luxury">
+  <a class="skip-link" href="#editor">跳到编辑区</a>
+  <header class="site-header">
+    <a class="brand" href="../index.html" aria-label="返回模板主页">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M6.8 4.5h10.4A2.3 2.3 0 0 1 19.5 6.8v10.4a2.3 2.3 0 0 1-2.3 2.3H6.8a2.3 2.3 0 0 1-2.3-2.3V6.8a2.3 2.3 0 0 1 2.3-2.3Z"/><circle cx="12" cy="10" r="2.5"/><path d="M7.8 17c.8-2.2 2.2-3.3 4.2-3.3s3.4 1.1 4.2 3.3"/></svg>
+      </span>
+      <span>人物卡片</span>
+    </a>
+    <div class="header-side">
+      <a class="back-link" href="../index.html">← 返回模板主页</a>
+      <span class="header-note">本地生成 · 图片不上传服务器</span>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <section class="intro intro-compact" aria-labelledby="page-title">
+      <div class="eyebrow">QUOTE · 03</div>
+      <h1 id="page-title">奢华拱窗</h1>
+      <p>深色底与拱形大图，高端商务感</p>
+    </section>
+
+    <div class="workspace">
+      <section class="editor-panel" id="editor" aria-labelledby="editor-title">
+        <div class="panel-heading">
+          <div>
+            <span class="step-label">编辑内容</span>
+            <h2 id="editor-title">完善报价卡片</h2>
+          </div>
+          <button class="text-button" type="button" id="resetButton">恢复示例</button>
+        </div>
+
+        <div class="form-section">
+          <div class="section-title"><span>01</span><h3>报价设置</h3></div>
+          <div class="field-grid">
+            <div class="field">
+              <div class="label-row">
+                <label for="titleInput">报价单标题</label>
+                <span class="char-count" data-count-for="titleInput"></span>
+              </div>
+              <input id="titleInput" type="text" value="商务合作报价单" maxlength="16">
+            </div>
+            <div class="field">
+              <div class="label-row">
+                <label for="validityInput">有效期</label>
+                <span class="char-count" data-count-for="validityInput"></span>
+              </div>
+              <input id="validityInput" type="text" value="报价有效期：30天" maxlength="16">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="section-title"><span>02</span><h3>明星信息</h3></div>
+          <label class="upload-zone" id="uploadZone" for="photoInput">
+            <input id="photoInput" type="file" accept="image/jpeg,image/png,image/webp" hidden>
+            <span class="upload-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5M5 14v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/></svg>
+            </span>
+            <span class="upload-copy"><strong id="uploadTitle">上传明星照片</strong><small>支持 JPG、PNG、WebP，建议使用高清半身照</small></span>
+            <span class="upload-action">选择图片</span>
+          </label>
+          <div class="photo-controls">
+            <div class="control-heading"><span>画面调整</span></div>
+            <div class="range-row">
+              <label for="photoZoom">人物缩放 <output id="photoZoomValue" for="photoZoom">100%</output></label>
+              <input id="photoZoom" type="range" min="75" max="200" value="100">
+            </div>
+            <div class="range-row">
+              <label for="photoPosition">垂直位置</label>
+              <input id="photoPosition" type="range" min="0" max="100" value="35">
+            </div>
+          </div>
+          <div class="field-grid">
+            <div class="field">
+              <div class="label-row">
+                <label for="nameInput">姓名</label>
+                <span class="char-count" data-count-for="nameInput"></span>
+              </div>
+              <input id="nameInput" type="text" value="沈亦舟" maxlength="10">
+            </div>
+            <div class="field">
+              <div class="label-row">
+                <label for="tagInput">身份标签</label>
+                <span class="char-count" data-count-for="tagInput"></span>
+              </div>
+              <input id="tagInput" type="text" value="影视演员" maxlength="10">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="section-title"><span>03</span><h3>报价明细</h3></div>
+          <div class="field-grid">
+            <div class="field">
+              <div class="label-row">
+                <label for="item1NameInput">项目一</label>
+                <span class="char-count" data-count-for="item1NameInput"></span>
+              </div>
+              <input id="item1NameInput" type="text" value="形象代言（年度）" maxlength="12">
+            </div>
+            <div class="field">
+              <div class="label-row">
+                <label for="item1PriceInput">报价</label>
+                <span class="char-count" data-count-for="item1PriceInput"></span>
+              </div>
+              <input id="item1PriceInput" type="text" value="180万" maxlength="12">
+            </div>
+            <div class="field">
+              <div class="label-row">
+                <label for="item2NameInput">项目二</label>
+                <span class="char-count" data-count-for="item2NameInput"></span>
+              </div>
+              <input id="item2NameInput" type="text" value="出席商业活动" maxlength="12">
+            </div>
+            <div class="field">
+              <div class="label-row">
+                <label for="item2PriceInput">报价</label>
+                <span class="char-count" data-count-for="item2PriceInput"></span>
+              </div>
+              <input id="item2PriceInput" type="text" value="25万/场" maxlength="12">
+            </div>
+            <div class="field">
+              <div class="label-row">
+                <label for="item3NameInput">项目三</label>
+                <span class="char-count" data-count-for="item3NameInput"></span>
+              </div>
+              <input id="item3NameInput" type="text" value="社媒图文发布" maxlength="12">
+            </div>
+            <div class="field">
+              <div class="label-row">
+                <label for="item3PriceInput">报价</label>
+                <span class="char-count" data-count-for="item3PriceInput"></span>
+              </div>
+              <input id="item3PriceInput" type="text" value="12万/条" maxlength="12">
+            </div>
+            <div class="field">
+              <div class="label-row">
+                <label for="item4NameInput">项目四</label>
+                <span class="char-count" data-count-for="item4NameInput"></span>
+              </div>
+              <input id="item4NameInput" type="text" value="直播专场" maxlength="12">
+            </div>
+            <div class="field">
+              <div class="label-row">
+                <label for="item4PriceInput">报价</label>
+                <span class="char-count" data-count-for="item4PriceInput"></span>
+              </div>
+              <input id="item4PriceInput" type="text" value="40万/场" maxlength="12">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section compact-section">
+          <div class="section-title"><span>04</span><h3>说明与样式</h3></div>
+          <div class="field">
+            <div class="label-row">
+              <label for="tipInput">备注说明</label>
+              <span class="char-count" data-count-for="tipInput"></span>
+            </div>
+            <input id="tipInput" type="text" value="以上报价不含差旅与制作费用，最终以合同为准" maxlength="34">
+          </div>
+          <div class="field">
+            <div class="label-row">
+              <label for="contactInput">联系方式</label>
+              <span class="char-count" data-count-for="contactInput"></span>
+            </div>
+            <input id="contactInput" type="text" value="" maxlength="30" placeholder="例如：商务合作 微信 StarBiz">
+            <small>卡片上的合作联系入口，建议填写经纪人微信或邮箱</small>
+          </div>
+          <div class="field">
+            <div class="label-row">
+              <label for="footerInput">底部说明</label>
+              <span class="char-count" data-count-for="footerInput"></span>
+            </div>
+            <input id="footerInput" type="text" value="明星经纪 · 一对一服务" maxlength="30">
+          </div>
+          <div class="field-grid">
+            <div class="field">
+              <div class="label-row">
+                <label for="watermarkInput">水印文字</label>
+                <span class="char-count" data-count-for="watermarkInput"></span>
+              </div>
+              <input id="watermarkInput" type="text" value="" maxlength="20" placeholder="例如：仅供合作查阅">
+              <small>斜向平铺覆盖整张卡片，留空则不显示</small>
+            </div>
+            <div class="field">
+              <label for="themeSelect">卡片配色</label>
+              <select id="themeSelect">
+                <option value="lavender">雾霭紫</option>
+                <option value="peach">暖杏橙</option>
+                <option value="mint">静谧绿</option>
+                <option value="midnight">深海蓝</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="sizeSelect">导出尺寸</label>
+              <select id="sizeSelect">
+                <option value="900x1200">900 × 1200</option>
+                <option value="1080x1440" selected>1080 × 1440</option>
+                <option value="1350x1800">1350 × 1800</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="preview-column" aria-labelledby="preview-title">
+        <div class="preview-toolbar">
+          <div>
+            <span class="live-dot" aria-hidden="true"></span>
+            <span id="preview-title">实时预览</span>
+          </div>
+          <span id="sizeBadge">1080 × 1440 px</span>
+        </div>
+        <div class="canvas-stage">
+          <canvas id="cardCanvas" width="1080" height="1440" aria-label="明星报价卡片实时预览"></canvas>
+        </div>
+        <button class="download-button" type="button" id="downloadButton">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v11m0 0 4-4m-4 4-4-4M5 19.5h14"/></svg>
+          <span>下载高清 PNG</span>
+        </button>
+        <p class="privacy-note">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 10V7a4 4 0 0 1 8 0v3m-9 0h10a1 1 0 0 1 1 1v8H6v-8a1 1 0 0 1 1-1Z"/></svg>
+          你的图片只在本地浏览器中处理
+        </p>
+      </aside>
+    </div>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">卡片已下载</div>
+  <script src="../js/renderers.js"></script>
+  <script src="q03-luxury.js"></script>
+  <script src="../js/quote-editor.js"></script>
+</body>
+</html>

@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="极简线表风格的明星批量报价模板，色带表头与斑马纹表格，一次列出多位明星报价。">
+  <title>极简线表 · 明星批量报价</title>
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body data-batch="minimal-lines">
+  <a class="skip-link" href="#editor">跳到编辑区</a>
+  <header class="site-header">
+    <a class="brand" href="../index.html" aria-label="返回模板主页">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M6.8 4.5h10.4A2.3 2.3 0 0 1 19.5 6.8v10.4a2.3 2.3 0 0 1-2.3 2.3H6.8a2.3 2.3 0 0 1-2.3-2.3V6.8a2.3 2.3 0 0 1 2.3-2.3Z"/><circle cx="12" cy="10" r="2.5"/><path d="M7.8 17c.8-2.2 2.2-3.3 4.2-3.3s3.4 1.1 4.2 3.3"/></svg>
+      </span>
+      <span>人物卡片</span>
+    </a>
+    <div class="header-side">
+      <a class="back-link" href="../index.html">← 返回模板主页</a>
+      <span class="header-note">本地生成 · 数据不上传服务器</span>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <section class="intro intro-compact" aria-labelledby="page-title">
+      <div class="eyebrow">BATCH · 04</div>
+      <h1 id="page-title">极简线表</h1>
+      <p>细线与大留白，安静有力</p>
+    </section>
+
+    <div class="workspace">
+      <section class="editor-panel" id="editor" aria-labelledby="editor-title">
+        <div class="panel-heading">
+          <div>
+            <span class="step-label">编辑内容</span>
+            <h2 id="editor-title">完善批量报价表</h2>
+          </div>
+          <button class="text-button" type="button" id="resetButton">恢复示例</button>
+        </div>
+
+        <div class="form-section">
+          <div class="section-title"><span>01</span><h3>表格设置</h3></div>
+          <div class="field">
+            <div class="label-row">
+              <label for="titleInput">表格标题</label>
+              <span class="char-count" data-count-for="titleInput"></span>
+            </div>
+            <input id="titleInput" type="text" value="明星艺人商务报价表" maxlength="16">
+            <small>显示在卡片顶部的大号标题</small>
+          </div>
+          <div class="field-grid cols-3">
+            <div class="field">
+              <div class="label-row">
+                <label for="col1Input">第一列列名</label>
+                <span class="char-count" data-count-for="col1Input"></span>
+              </div>
+              <input id="col1Input" type="text" value="明星艺人" maxlength="8">
+            </div>
+            <div class="field">
+              <div class="label-row">
+                <label for="col2Input">第二列列名</label>
+                <span class="char-count" data-count-for="col2Input"></span>
+              </div>
+              <input id="col2Input" type="text" value="出场费/万" maxlength="8">
+            </div>
+            <div class="field">
+              <div class="label-row">
+                <label for="col3Input">第三列列名</label>
+                <span class="char-count" data-count-for="col3Input"></span>
+              </div>
+              <input id="col3Input" type="text" value="代表作品" maxlength="8">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="section-title"><span>02</span><h3>报价数据</h3></div>
+          <div class="batch-row batch-row-head">
+            <span>明星</span><span>报价</span><span>作品</span>
+          </div>
+          <div id="rowsContainer" class="batch-rows"></div>
+          <small class="control-hint">整行为空时该行不会显示在卡片上。</small>
+          <div class="field batch-count-field">
+            <label for="rowCountSelect">表格行数</label>
+            <select id="rowCountSelect">
+              <option value="4">4 行</option>
+              <option value="5">5 行</option>
+              <option value="6">6 行</option>
+              <option value="7">7 行</option>
+              <option value="8">8 行</option>
+              <option value="9">9 行</option>
+              <option value="10" selected>10 行</option>
+              <option value="11">11 行</option>
+              <option value="12">12 行</option>
+              <option value="13">13 行</option>
+              <option value="14">14 行</option>
+              <option value="15">15 行</option>
+              <option value="16">16 行</option>
+            </select>
+            <small>切换行数会保留已填写的内容</small>
+          </div>
+        </div>
+
+        <div class="form-section compact-section">
+          <div class="section-title"><span>03</span><h3>说明与样式</h3></div>
+          <div class="field">
+            <div class="label-row">
+              <label for="contactInput">联系人</label>
+              <span class="char-count" data-count-for="contactInput"></span>
+            </div>
+            <input id="contactInput" type="text" value="" maxlength="30" placeholder="例如：李经理 138-0000-0000">
+            <small>显示在卡片底部的联系入口</small>
+          </div>
+          <div class="field">
+            <div class="label-row">
+              <label for="footerInput">底部说明</label>
+              <span class="char-count" data-count-for="footerInput"></span>
+            </div>
+            <input id="footerInput" type="text" value="明星经纪 · 报价以最终合同为准" maxlength="30">
+          </div>
+          <div class="field-grid">
+            <div class="field">
+              <div class="label-row">
+                <label for="watermarkInput">水印文字</label>
+                <span class="char-count" data-count-for="watermarkInput"></span>
+              </div>
+              <input id="watermarkInput" type="text" value="" maxlength="20" placeholder="例如：仅供合作查阅">
+              <small>斜向平铺覆盖整张卡片，留空则不显示</small>
+            </div>
+            <div class="field">
+              <label for="themeSelect">卡片配色</label>
+              <select id="themeSelect">
+                <option value="lavender">雾霭紫</option>
+                <option value="peach">暖杏橙</option>
+                <option value="mint">静谧绿</option>
+                <option value="midnight">深海蓝</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="sizeSelect">导出尺寸</label>
+              <select id="sizeSelect">
+                <option value="900x1200">900 × 1200</option>
+                <option value="1080x1440" selected>1080 × 1440</option>
+                <option value="1350x1800">1350 × 1800</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="preview-column" aria-labelledby="preview-title">
+        <div class="preview-toolbar">
+          <div>
+            <span class="live-dot" aria-hidden="true"></span>
+            <span id="preview-title">实时预览</span>
+          </div>
+          <span id="sizeBadge">1080 × 1440 px</span>
+        </div>
+        <div class="canvas-stage">
+          <canvas id="cardCanvas" width="1080" height="1440" aria-label="批量报价表实时预览"></canvas>
+        </div>
+        <button class="download-button" type="button" id="downloadButton">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v11m0 0 4-4m-4 4-4-4M5 19.5h14"/></svg>
+          <span>下载高清 PNG</span>
+        </button>
+        <p class="privacy-note">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 10V7a4 4 0 0 1 8 0v3m-9 0h10a1 1 0 0 1 1 1v8H6v-8a1 1 0 0 1 1-1Z"/></svg>
+          你的数据只在本地浏览器中处理
+        </p>
+      </aside>
+    </div>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">卡片已下载</div>
+  <script src="../js/renderers.js"></script>
+  <script src="b04-minimal-lines.js"></script>
+  <script src="../js/batch-editor.js"></script>
+</body>
+</html>

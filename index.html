@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="40 款人物卡片模板：单人介绍、明星对比、明星报价与批量报价，上传照片、填写文字，一键生成高清卡片。">
+  <title>人物卡片生成器 · 模板主页</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#template-tabs">跳到模板选择</a>
+  <header class="site-header">
+    <a class="brand" href="#" aria-label="人物卡片生成器首页">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M6.8 4.5h10.4A2.3 2.3 0 0 1 19.5 6.8v10.4a2.3 2.3 0 0 1-2.3 2.3H6.8a2.3 2.3 0 0 1-2.3-2.3V6.8a2.3 2.3 0 0 1 2.3-2.3Z"/><circle cx="12" cy="10" r="2.5"/><path d="M7.8 17c.8-2.2 2.2-3.3 4.2-3.3s3.4 1.1 4.2 3.3"/></svg>
+      </span>
+      <span>人物卡片</span>
+    </a>
+    <span class="header-note">40 款风格模板 · 本地生成 · 数据不上传服务器</span>
+  </header>
+
+  <main class="page-shell">
+    <section class="intro" aria-labelledby="page-title">
+      <div class="eyebrow">TEMPLATE GALLERY</div>
+      <h1 id="page-title">介绍 · 对比 · 报价 · 批量<br><span>40 款模板一键生成</span></h1>
+      <p>上传照片、填写文字，实时预览并导出高清 PNG。对比模板突出出场费，报价模板生成商务报价单，批量模板一次列出全部人选。所有处理均在你的浏览器中完成。</p>
+    </section>
+
+    <div class="home-layout">
+      <nav class="side-nav" aria-label="模板分类">
+        <a href="#" data-group="single" class="is-active" aria-current="true">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>
+          <span>单人介绍模板</span>
+          <span class="nav-count">10</span>
+        </a>
+        <a href="#" data-group="compare">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="8" cy="9" r="3.2"/><circle cx="16" cy="9" r="3.2"/><path d="M3 19c1-3 2.8-4.5 5-4.5S12 16 13 19m3.5-4.5c2 0 3.8 1.5 4.5 4.5"/></svg>
+          <span>明星对比模板</span>
+          <span class="nav-count">10</span>
+        </a>
+        <a href="#" data-group="quote">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M11.5 3H4v7.5L14 20.5l7-7L11.5 3Z"/><circle cx="7.8" cy="7.8" r="1.5"/></svg>
+          <span>明星报价模板</span>
+          <span class="nav-count">10</span>
+        </a>
+        <a href="#" data-group="batch">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4.5 5h15v14h-15Z M4.5 10h15 M11 5v14"/></svg>
+          <span>批量报价模板</span>
+          <span class="nav-count">10</span>
+        </a>
+      </nav>
+
+      <div class="home-groups">
+        <section id="group-single" class="home-group" data-group="single">
+          <div class="group-heading">
+            <div class="eyebrow">SINGLE GALLERY</div>
+            <h2>单人介绍模板</h2>
+            <p>一位明星的介绍卡片，突出形象与合作联系入口</p>
+          </div>
+          <nav class="tabs" id="template-tabs" role="tablist" aria-label="单人卡片模板">
+            <button class="tab is-active" role="tab" aria-selected="true" data-template="classic">经典图文</button>
+            <button class="tab" role="tab" aria-selected="false" tabindex="-1" data-template="magazine">杂志封面</button>
+            <button class="tab" role="tab" aria-selected="false" tabindex="-1" data-template="minimal">极简留白</button>
+            <button class="tab" role="tab" aria-selected="false" tabindex="-1" data-template="poster">大字海报</button>
+            <button class="tab" role="tab" aria-selected="false" tabindex="-1" data-template="cinema">电影片头</button>
+            <button class="tab" role="tab" aria-selected="false" tabindex="-1" data-template="social">社交渐变</button>
+            <button class="tab" role="tab" aria-selected="false" tabindex="-1" data-template="press">报章黑白</button>
+            <button class="tab" role="tab" aria-selected="false" tabindex="-1" data-template="glass">通透玻璃</button>
+            <button class="tab" role="tab" aria-selected="false" tabindex="-1" data-template="ink">竖排雅致</button>
+            <button class="tab" role="tab" aria-selected="false" tabindex="-1" data-template="dossier">档案编号</button>
+          </nav>
+          <section class="showcase" aria-live="polite">
+            <div class="showcase-preview">
+              <div class="preview-toolbar">
+                <div>
+                  <span class="live-dot" aria-hidden="true"></span>
+                  <span>模板预览</span>
+                </div>
+                <span>900 × 1200 px</span>
+              </div>
+              <div class="canvas-stage">
+                <canvas id="previewCanvas" width="1080" height="1440" aria-label="当前模板效果预览"></canvas>
+              </div>
+            </div>
+            <div class="showcase-info">
+              <div class="eyebrow" id="templateIndex">TEMPLATE · 01</div>
+              <h2 id="templateName">经典图文</h2>
+              <p id="templateTagline">照片与资料分区呈现，信息完整均衡</p>
+              <ul class="showcase-points">
+                <li>突出人物形象的大图版式</li>
+                <li>醒目的商务合作联系入口</li>
+                <li>四套配色与自定义文字水印</li>
+                <li>三种高清尺寸一键导出 PNG</li>
+              </ul>
+              <a class="download-button showcase-cta" id="useTemplate" href="templates/t01-classic.html">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m0 0-5-5m5 5-5 5"/></svg>
+                <span>使用此模板制作</span>
+              </a>
+            </div>
+          </section>
+        </section>
+
+        <section id="group-compare" class="home-group" data-group="compare">
+          <div class="group-heading">
+            <div class="eyebrow">COMPARE GALLERY</div>
+            <h2>明星对比模板</h2>
+            <p>两位人选同卡对比，突出照片、姓名与出场费</p>
+          </div>
+          <nav class="tabs" id="compare-tabs" role="tablist" aria-label="明星对比模板">
+            <button class="tab is-active" role="tab" aria-selected="true" data-compare="split-vs">对垒分屏</button>
+            <button class="tab" role="tab" aria-selected="false" tabindex="-1" data-compare="spotlight">焦点对决</button>
+            <button class="tab" role="tab" aria-selected="false" tabindex="-1" data-compare="ranking">榜单对决</button>
+            <button class="tab" role="tab" aria-selected="false" tabindex="-1" data-compare="stacked">上下对台</button>
+            <button class="tab" role="tab" aria-selected="false" tabindex="-1" data-compare="clash">撞色渐变</button>
+            <button class="tab" role="tab" aria-selected="false" tabindex="-1" data-compare="neon">电竞霓虹</button>
+            <button class="tab" role="tab" aria-selected="false" tabindex="-1" data-compare="press-duel">报纸对决</button>
+            <button class="tab" role="tab" aria-selected="false" tabindex="-1" data-compare="glass-vs">玻璃对决</button>
+            <button class="tab" role="tab" aria-selected="false" tabindex="-1" data-compare="dossier-compare">档案对比</button>
+            <button class="tab" role="tab" aria-selected="false" tabindex="-1" data-compare="vote">票选对决</button>
+          </nav>
+          <section class="showcase" aria-live="polite">
+            <div class="showcase-preview">
+              <div class="preview-toolbar">
+                <div>
+                  <span class="live-dot" aria-hidden="true"></span>
+                  <span>模板预览</span>
+                </div>
+                <span>900 × 1200 px</span>
+              </div>
+              <div class="canvas-stage">
+                <canvas id="compareCanvas" width="1080" height="1440" aria-label="当前对比模板效果预览"></canvas>
+              </div>
+            </div>
+            <div class="showcase-info">
+              <div class="eyebrow" id="compareIndex">COMPARE · 01</div>
+              <h2 id="compareName">对垒分屏</h2>
+              <p id="compareTagline">对角线分屏与中央 VS，对抗感最强</p>
+              <ul class="showcase-points">
+                <li>两位明星照片同卡对比</li>
+                <li>姓名与出场费大号强调展示</li>
+                <li>四套配色与自定义文字水印</li>
+                <li>高清 PNG 一键导出</li>
+              </ul>
+              <a class="download-button showcase-cta" id="useCompare" href="compare/c01-split-vs.html">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m0 0-5-5m5 5-5 5"/></svg>
+                <span>使用此模板制作</span>
+              </a>
+            </div>
+          </section>
+        </section>
+
+        <section id="group-quote" class="home-group" data-group="quote">
+          <div class="group-heading">
+            <div class="eyebrow">QUOTE GALLERY</div>
+            <h2>明星报价模板</h2>
+            <p>面向客户的商务报价单，照片与四项报价明细一目了然</p>
+          </div>
+          <nav class="tabs" id="quote-tabs" role="tablist" aria-label="明星报价模板">
+            <button class="tab is-active" role="tab" aria-selected="true" data-quote="price-list">价目单</button>
+            <button class="tab" role="tab" aria-selected="false" tabindex="-1" data-quote="menu">菜单报价</button>
+            <button class="tab" role="tab" aria-selected="false" tabindex="-1" data-quote="luxury">奢华拱窗</button>
+            <button class="tab" role="tab" aria-selected="false" tabindex="-1" data-quote="ticket">票据报价</button>
+            <button class="tab" role="tab" aria-selected="false" tabindex="-1" data-quote="modern">渐变横幅</button>
+            <button class="tab" role="tab" aria-selected="false" tabindex="-1" data-quote="magazine">杂志分栏</button>
+            <button class="tab" role="tab" aria-selected="false" tabindex="-1" data-quote="grid">极简数字</button>
+            <button class="tab" role="tab" aria-selected="false" tabindex="-1" data-quote="glass">玻璃报价</button>
+            <button class="tab" role="tab" aria-selected="false" tabindex="-1" data-quote="dossier">报价档案</button>
+            <button class="tab" role="tab" aria-selected="false" tabindex="-1" data-quote="ink">中式红笺</button>
+          </nav>
+          <section class="showcase" aria-live="polite">
+            <div class="showcase-preview">
+              <div class="preview-toolbar">
+                <div>
+                  <span class="live-dot" aria-hidden="true"></span>
+                  <span>模板预览</span>
+                </div>
+                <span>900 × 1200 px</span>
+              </div>
+              <div class="canvas-stage">
+                <canvas id="quoteCanvas" width="1080" height="1440" aria-label="当前报价模板效果预览"></canvas>
+              </div>
+            </div>
+            <div class="showcase-info">
+              <div class="eyebrow" id="quoteIndex">QUOTE · 01</div>
+              <h2 id="quoteName">价目单</h2>
+              <p id="quoteTagline">简洁价目排版，报价一目了然</p>
+              <ul class="showcase-points">
+                <li>明星照片与四项报价明细</li>
+                <li>有效期、备注与联系入口齐备</li>
+                <li>四套配色与自定义文字水印</li>
+                <li>高清 PNG 一键导出</li>
+              </ul>
+              <a class="download-button showcase-cta" id="useQuote" href="quote/q01-price-list.html">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m0 0-5-5m5 5-5 5"/></svg>
+                <span>使用此模板制作</span>
+              </a>
+            </div>
+          </section>
+        </section>
+
+        <section id="group-batch" class="home-group" data-group="batch">
+          <div class="group-heading">
+            <div class="eyebrow">BATCH GALLERY</div>
+            <h2>批量报价模板</h2>
+            <p>一次列出多位明星的报价表格，列名与行数可自定义</p>
+          </div>
+          <nav class="tabs" id="batch-tabs" role="tablist" aria-label="批量报价模板">
+            <button class="tab is-active" role="tab" aria-selected="true" data-batch="classic-table">经典蓝表</button>
+            <button class="tab" role="tab" aria-selected="false" tabindex="-1" data-batch="dark-table">暗夜行情</button>
+            <button class="tab" role="tab" aria-selected="false" tabindex="-1" data-batch="gradient-header">渐变榜头</button>
+            <button class="tab" role="tab" aria-selected="false" tabindex="-1" data-batch="minimal-lines">极简线表</button>
+            <button class="tab" role="tab" aria-selected="false" tabindex="-1" data-batch="chart-list">榜单排行</button>
+            <button class="tab" role="tab" aria-selected="false" tabindex="-1" data-batch="press-table">报纸行情</button>
+            <button class="tab" role="tab" aria-selected="false" tabindex="-1" data-batch="card-rows">卡片行组</button>
+            <button class="tab" role="tab" aria-selected="false" tabindex="-1" data-batch="banner-table">撞色横幅</button>
+            <button class="tab" role="tab" aria-selected="false" tabindex="-1" data-batch="glass-table">玻璃行情</button>
+            <button class="tab" role="tab" aria-selected="false" tabindex="-1" data-batch="ink-table">中式雅表</button>
+          </nav>
+          <section class="showcase" aria-live="polite">
+            <div class="showcase-preview">
+              <div class="preview-toolbar">
+                <div>
+                  <span class="live-dot" aria-hidden="true"></span>
+                  <span>模板预览</span>
+                </div>
+                <span>900 × 1200 px</span>
+              </div>
+              <div class="canvas-stage">
+                <canvas id="batchCanvas" width="1080" height="1440" aria-label="当前批量报价模板效果预览"></canvas>
+              </div>
+            </div>
+            <div class="showcase-info">
+              <div class="eyebrow" id="batchIndex">BATCH · 01</div>
+              <h2 id="batchName">经典蓝表</h2>
+              <p id="batchTagline">色带表头与斑马纹行，干净利落</p>
+              <ul class="showcase-points">
+                <li>默认 10 行报价，行数 4–16 可调</li>
+                <li>列名可自定义（明星 / 报价 / 作品）</li>
+                <li>醒目标题、联系人与水印齐备</li>
+                <li>四套配色一键切换</li>
+              </ul>
+              <a class="download-button showcase-cta" id="useBatch" href="batch/b01-classic-table.html">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m0 0-5-5m5 5-5 5"/></svg>
+                <span>使用此模板制作</span>
+              </a>
+            </div>
+          </section>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/renderers.js"></script>
+  <script src="compare/c01-split-vs.js"></script>
+  <script src="compare/c02-spotlight.js"></script>
+  <script src="compare/c03-ranking.js"></script>
+  <script src="compare/c04-stacked.js"></script>
+  <script src="compare/c05-clash.js"></script>
+  <script src="compare/c06-neon.js"></script>
+  <script src="compare/c07-press-duel.js"></script>
+  <script src="compare/c08-glass-vs.js"></script>
+  <script src="compare/c09-dossier-compare.js"></script>
+  <script src="compare/c10-vote.js"></script>
+  <script src="quote/q01-price-list.js"></script>
+  <script src="quote/q02-menu.js"></script>
+  <script src="quote/q03-luxury.js"></script>
+  <script src="quote/q04-ticket.js"></script>
+  <script src="quote/q05-modern.js"></script>
+  <script src="quote/q06-magazine.js"></script>
+  <script src="quote/q07-grid.js"></script>
+  <script src="quote/q08-glass.js"></script>
+  <script src="quote/q09-dossier.js"></script>
+  <script src="quote/q10-ink.js"></script>
+  <script src="batch/b01-classic-table.js"></script>
+  <script src="batch/b02-dark-table.js"></script>
+  <script src="batch/b03-gradient-header.js"></script>
+  <script src="batch/b04-minimal-lines.js"></script>
+  <script src="batch/b05-chart-list.js"></script>
+  <script src="batch/b06-press-table.js"></script>
+  <script src="batch/b07-card-rows.js"></script>
+  <script src="batch/b08-banner-table.js"></script>
+  <script src="batch/b09-glass-table.js"></script>
+  <script src="batch/b10-ink-table.js"></script>
+  <script src="home.js"></script>
+</body>
+</html>
