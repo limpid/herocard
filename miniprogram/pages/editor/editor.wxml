@@ -1,4 +1,9 @@
 <view class="page">
+  <!-- 依赖标记：构建工具靠静态引用识别文件依赖，readFile 动态读取无法被识别，
+       不加此标记时 Logo 会被「过滤无依赖文件」剔除出编译包 -->
+  <image class="dep-marker" src="/assets/my-logo.png" />
+  <image class="dep-marker" src="/assets/star_storm_logo_64x64.png" />
+
   <view class="preview-wrap">
     <canvas type="2d" id="card" class="preview" style="width:{{cw}}px;height:{{ch}}px"></canvas>
     <view class="preview-meta">
