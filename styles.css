@@ -299,7 +299,7 @@ body.js-loading .showcase { opacity: 0; }
 @media (max-width: 760px) {
   .showcase { display: flex; flex-direction: column; gap: 24px; align-items: stretch; }
   .showcase-preview .canvas-stage { max-width: 430px; margin: 0 auto; }
-  .showcase-cta { width: fit-content; max-width: 100%; margin-left: auto; margin-right: auto; }
+  .showcase-cta { width: fit-content; min-width: min(320px, 100%); max-width: 100%; margin-left: auto; margin-right: auto; }
   .tabs { margin-bottom: 20px; }
 }
 
