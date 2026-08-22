@@ -310,7 +310,7 @@ Page({
     }
     if (this.data.group === 'compare') {
       return {
-        title: (d.title || '').trim() || '代言人对比',
+        title: (d.title || '').trim() || '商务合作报价单',
         tip: (d.tip || '').trim() || '报价仅供参考',
         contact: (d.contact || '').trim(),
         footer: (d.footer || '').trim() || '填写底部说明文字',

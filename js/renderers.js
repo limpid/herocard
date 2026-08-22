@@ -290,7 +290,7 @@
         h.fillRoundRect(ctx, 120, 1070, 660, 46, 13, pal.button);
         ctx.fillStyle = '#ffffff';
         ctx.font = `600 20px ${SANS}`;
-        ctx.fillText(d.contact ? '洽谈代言合作' : '查看完整人物资料', 450, 1101);
+        ctx.fillText(d.contact ? '商务合作洽谈' : '查看完整人物资料', 450, 1101);
         ctx.textAlign = 'left';
         h.drawWatermark(d.watermark, { color: '#3c3c46', alpha: 0.09 });
       }
@@ -377,7 +377,7 @@
       tagline: '大图居中与大量留白，突出人物气质',
       render(ctx, d, h) {
         const pal = PALETTES[d.themeKey];
-        const contact = d.contact || '洽谈代言合作';
+        const contact = d.contact || '商务合作洽谈';
         ctx.fillStyle = pal.soft;
         ctx.fillRect(0, 0, 900, 1200);
         ctx.strokeStyle = pal.glow;
@@ -517,7 +517,7 @@
       tagline: '满幅银幕形象与醒目合作入口',
       render(ctx, d, h) {
         const pal = PALETTES[d.themeKey];
-        const contact = d.contact || '洽谈代言合作';
+        const contact = d.contact || '商务合作洽谈';
         ctx.fillStyle = pal.deep;
         ctx.fillRect(0, 0, 900, 1200);
 
@@ -594,7 +594,7 @@
       tagline: '大图卡片与鲜明联系按钮，亲和吸睛',
       render(ctx, d, h) {
         const pal = PALETTES[d.themeKey];
-        const contact = d.contact || '洽谈代言合作';
+        const contact = d.contact || '商务合作洽谈';
         const bg = ctx.createLinearGradient(0, 0, 900, 1200);
         bg.addColorStop(0, pal.light);
         bg.addColorStop(1, pal.dark);
@@ -679,7 +679,7 @@
       tagline: '整版人物特写与报纸排版，可信复古',
       render(ctx, d, h) {
         const pal = PALETTES[d.themeKey];
-        const contact = d.contact || '洽谈代言合作请联系';
+        const contact = d.contact || '商务合作洽谈请联系';
         ctx.fillStyle = pal.soft;
         ctx.fillRect(0, 0, 900, 1200);
 
@@ -923,7 +923,7 @@
         ctx.font = `600 24px ${SANS}`;
         priceChars.forEach((ch, index) => ctx.fillText(ch, 672, 130 + index * 34));
 
-        const contactChars = limitChars(d.contact || '洽谈代言合作', 15);
+        const contactChars = limitChars(d.contact || '商务合作洽谈', 15);
         ctx.fillStyle = sealRed;
         ctx.font = `700 23px ${SANS}`;
         contactChars.forEach((ch, index) => ctx.fillText(ch, 616, 130 + index * 33));

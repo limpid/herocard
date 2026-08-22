@@ -14,7 +14,7 @@ var window = require('../../utils/env.js');
     render(ctx, d, h) {
       const pal = window.CARD_PALETTES[d.themeKey];
       const star = { image: d.image, focusX: 50, focusY: d.focusY, zoom: d.zoom };
-      const contact = d.contact || '洽谈代言合作';
+      const contact = d.contact || '商务合作洽谈';
 
       ctx.fillStyle = pal.soft;
       ctx.fillRect(0, 0, 900, 1200);

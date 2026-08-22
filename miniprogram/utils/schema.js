@@ -206,7 +206,7 @@ const defaults = {
     zoom: 100
   },
   compare: {
-    title: '代言人对比',
+    title: '商务合作报价单',
     tip: '报价仅供参考',
     nameA: '沈亦舟',
     tagA: '影视演员',
@@ -215,7 +215,7 @@ const defaults = {
     tagB: '全能艺人',
     feeB: '出场费 120万/场',
     contact: '',
-    footer: '点击联系经纪人，锁定心仪人选',
+    footer: '联系经纪人，锁定心仪人选',
     watermark: '',
     zoomA: 100,
     zoomB: 100,

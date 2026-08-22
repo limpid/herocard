@@ -39,7 +39,7 @@
   };
 
   const defaults = {
-    title: '代言人对比 · 谁更适合你的品牌',
+    title: '商务合作报价单 · 谁更适合你的品牌',
     tip: '报价仅供参考，以实际沟通为准',
     nameA: '沈亦舟',
     tagA: '影视演员',
@@ -48,7 +48,7 @@
     tagB: '全能艺人',
     feeB: '出场费 120万/场',
     contact: '',
-    footer: '点击联系经纪人，锁定心仪人选',
+    footer: '联系经纪人，锁定心仪人选',
     watermark: ''
   };
 
@@ -83,7 +83,7 @@
     ctx.imageSmoothingQuality = 'high';
 
     const data = {
-      title: elements.title.value.trim() || '代言人对比',
+      title: elements.title.value.trim() || '商务合作报价单',
       tip: elements.tip.value.trim() || '报价仅供参考',
       contact: elements.contact.value.trim(),
       footer: elements.footer.value.trim() || '填写底部说明文字',

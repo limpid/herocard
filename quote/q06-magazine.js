@@ -12,7 +12,7 @@
     render(ctx, d, h) {
       const pal = window.CARD_PALETTES[d.themeKey];
       const star = { image: d.image, focusX: 50, focusY: d.focusY, zoom: d.zoom };
-      const contact = d.contact || '洽谈代言合作';
+      const contact = d.contact || '商务合作洽谈';
 
       ctx.save();
       ctx.beginPath();
