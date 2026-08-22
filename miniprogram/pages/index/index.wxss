@@ -92,6 +92,7 @@
 
 .card {
   /* 固定 rpx 宽度（calc 混合 % 与 rpx 在真机上失效） */
+  position: relative;
   width: 337rpx;
   box-sizing: border-box;
   padding: 24rpx 22rpx 20rpx;
@@ -103,6 +104,25 @@
   display: flex;
   flex-direction: column;
   min-height: 210rpx;
+}
+
+.card-usage {
+  position: absolute;
+  top: 18rpx;
+  right: 16rpx;
+  padding: 5rpx 12rpx;
+  border-radius: 999rpx;
+  background: rgba(123, 118, 237, 0.12);
+  color: #5d58db;
+  font-size: 18rpx;
+  font-weight: 700;
+  line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+}
+
+.card-usage.is-zero {
+  background: #f1f0f6;
+  color: #a5a2c0;
 }
 
 .card:active {

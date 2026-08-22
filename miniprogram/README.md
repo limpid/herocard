@@ -49,6 +49,18 @@ node tools/sync-vendor.js
 
 > 垫片原理：微信 AppService 沙箱中模块作用域无法定义全局 `window`（渲染器 IIFE 里的 `window` 是 undefined），因此必须以模块级 `var window = require(...)` 注入，渲染器源码其余部分与 Web 端逐字节一致。
 
+## 使用计数后端（server/usage-api.py）
+
+小程序会统计每个模板的使用次数并在主页卡片右上角显示：
+
+- **接口**（已部署于 lobking.com，systemd 服务 `herocard-usage`）：
+  - `POST https://lobking.com/api/usage` `{ group, tpl }` → 计数 +1，返回 `{ ok, count }`
+  - `GET https://lobking.com/api/usage` → 返回全部计数 `{ ok, data }`
+- **容错**：本地 storage 计数兜底，后端不可达时静默降级，完全不影响使用
+- **重要**：真机上报需在小程序后台「开发管理 → 开发设置 → 服务器域名」配置
+  `https://lobking.com` 为 **request 合法域名**（要求域名已 ICP 备案）；
+  未配置时仅开发者工具（勾选「不校验合法域名」）可上报，线上将自动使用本地计数
+
 ## 已知平台差异
 
 - `ctx.filter = 'blur(...)'`（照片缩小后的背景模糊）在小程序 canvas 2d 中不生效，自动降级为无模糊背景，主体渲染不受影响
