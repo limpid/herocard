@@ -3,11 +3,11 @@
  *
  * 双层数据源，网络失败不影响使用：
  *  - 本地计数（wx storage，立即可用、离线兜底）
- *  - 后端全局计数（GET /api/usage 拉取、POST /api/usage 上报，全部静默容错）
+ *  - 后端全局计数（GET /mp-api/usage 拉取、POST /mp-api/usage 上报，全部静默容错）
  *
  * 显示策略：优先后端全局计数，拉取失败时回退本地计数。
  */
-const BASE_URL = 'https://lobking.com';
+const API_URL = 'https://www.jxynstar.com/mp-api/usage';
 const LOCAL_KEY = 'herocard-usage-local';
 const REMOTE_KEY = 'herocard-usage-remote';
 
@@ -40,7 +40,7 @@ function record(group, tpl) {
   try { wx.setStorageSync(LOCAL_KEY, local); } catch (e) { /* 忽略 */ }
 
   wx.request({
-    url: BASE_URL + '/api/usage',
+    url: API_URL,
     method: 'POST',
     data: { group: group, tpl: tpl },
     timeout: 4000,
@@ -59,7 +59,7 @@ function record(group, tpl) {
 function fetchAll() {
   return new Promise((resolve) => {
     wx.request({
-      url: BASE_URL + '/api/usage',
+      url: API_URL,
       method: 'GET',
       timeout: 4000,
       success: (res) => {

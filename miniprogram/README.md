@@ -53,12 +53,14 @@ node tools/sync-vendor.js
 
 小程序会统计每个模板的使用次数并在主页卡片右上角显示：
 
-- **接口**（已部署于 lobking.com，systemd 服务 `herocard-usage`）：
-  - `POST https://lobking.com/api/usage` `{ group, tpl }` → 计数 +1，返回 `{ ok, count }`
-  - `GET https://lobking.com/api/usage` → 返回全部计数 `{ ok, data }`
+- **线上接口**（部署于 81.70.195.247 `www.jxynstar.com`，systemd 服务 `herocard-usage`，端口 3211）：
+  - `POST https://www.jxynstar.com/mp-api/usage` `{ group, tpl }` → 计数 +1，返回 `{ ok, count }`
+  - `GET https://www.jxynstar.com/mp-api/usage` → 返回全部计数 `{ ok, data }`
+  - 路径用独立前缀 `/mp-api/`，避开同域名 staragency 站点已占用的 `/api/`（Strapi）
+  - 源码副本存于服务器 `/opt/herocard-mp/`
 - **容错**：本地 storage 计数兜底，后端不可达时静默降级，完全不影响使用
 - **重要**：真机上报需在小程序后台「开发管理 → 开发设置 → 服务器域名」配置
-  `https://lobking.com` 为 **request 合法域名**（要求域名已 ICP 备案）；
+  `https://www.jxynstar.com` 为 **request 合法域名**（要求域名已 ICP 备案）；
   未配置时仅开发者工具（勾选「不校验合法域名」）可上报，线上将自动使用本地计数
 
 ## 已知平台差异
