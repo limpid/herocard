@@ -87,8 +87,23 @@ Page({
   /* ---------- 图片水印 ---------- */
 
   loadDefaultLogo() {
-    // 依次尝试多个 Logo 路径：my-logo.png（用户专属名，git 永不触碰）
-    // → star_storm_logo_64x64.png → 均无则回退内置绘制。
+    // 优先级：① 用户通过「更换图片」保存的 Logo（storage 持久化，最可靠）
+    //        ② 包内文件（getImageInfo，部分环境对包路径不可靠）
+    //        ③ 内置绘制
+    try {
+      const saved = wx.getStorageSync('herocard-custom-logo');
+      if (saved) {
+        const dataUrl = 'data:image/png;base64,' + saved;
+        canvasUtil.loadImage(this.canvas, dataUrl)
+          .then((img) => {
+            this.logoImg = img;
+            this.setData({ logoSrc: dataUrl });
+            this.renderNow();
+          })
+          .catch(() => this.tryLoadLogo(['/assets/my-logo.png', '/assets/star_storm_logo_64x64.png'], 0));
+        return;
+      }
+    } catch (e) { /* 忽略，继续尝试包内文件 */ }
     this.tryLoadLogo(['/assets/my-logo.png', '/assets/star_storm_logo_64x64.png'], 0);
   },
 
@@ -203,7 +218,19 @@ Page({
       });
       return;
     }
-    // 真实/自定义 Logo（本地路径）：直接预览
+    // 自定义 Logo（data URL）：写临时文件后预览
+    if (src.indexOf('data:') === 0) {
+      const dest = wx.env.USER_DATA_PATH + '/logo-preview.png';
+      wx.getFileSystemManager().writeFile({
+        filePath: dest,
+        data: src.split(',')[1],
+        encoding: 'base64',
+        success: () => wx.previewImage({ urls: [dest] }),
+        fail: () => wx.showToast({ title: '预览失败', icon: 'none' })
+      });
+      return;
+    }
+    // 包内/临时路径：直接预览
     if (src) {
       wx.previewImage({ urls: [src] });
       return;
@@ -218,14 +245,35 @@ Page({
       sizeType: ['original'],
       success: (res) => {
         const tempPath = res.tempFiles[0].tempFilePath;
-        canvasUtil.loadImage(this.canvas, tempPath)
-          .then((img) => {
-            this.logoImg = img;
-            this.setData({ logoSrc: tempPath, logoWatermark: true });
-            this.renderNow();
-            wx.showToast({ title: '水印图片已更换', icon: 'none' });
-          })
-          .catch(() => wx.showToast({ title: '图片读取失败', icon: 'none' }));
+        // 临时路径的 readFile 是可靠的（仅包内路径在本环境不可靠）：
+        // 读为 base64 持久化到 storage，之后每次打开自动加载，无需再选。
+        wx.getFileSystemManager().readFile({
+          filePath: tempPath,
+          encoding: 'base64',
+          success: (r) => {
+            try { wx.setStorageSync('herocard-custom-logo', r.data); } catch (e) { /* 忽略 */ }
+            const dataUrl = 'data:image/png;base64,' + r.data;
+            canvasUtil.loadImage(this.canvas, dataUrl)
+              .then((img) => {
+                this.logoImg = img;
+                this.setData({ logoSrc: dataUrl, logoWatermark: true });
+                this.renderNow();
+                wx.showToast({ title: '水印图片已保存，永久生效', icon: 'none' });
+              })
+              .catch(() => wx.showToast({ title: '图片解码失败', icon: 'none' }));
+          },
+          fail: () => {
+            // readFile 兜底失败：当次会话直接用临时路径
+            canvasUtil.loadImage(this.canvas, tempPath)
+              .then((img) => {
+                this.logoImg = img;
+                this.setData({ logoSrc: tempPath, logoWatermark: true });
+                this.renderNow();
+                wx.showToast({ title: '水印图片已更换（本次有效）', icon: 'none' });
+              })
+              .catch(() => wx.showToast({ title: '图片读取失败', icon: 'none' }));
+          }
+        });
       }
     });
   },
