@@ -64,10 +64,17 @@ Page({
 
   onReady() {
     canvasUtil.initCanvas('#card').then((res) => {
+      // 页面可能已被快速关闭（返回主页），此时放弃初始化
+      if (this.unloaded || !res) return;
       this.canvas = res.canvas;
       this.ctx = res.canvas.getContext('2d');
       this.renderNow();
     });
+  },
+
+  onUnload() {
+    this.unloaded = true;
+    clearTimeout(this.renderTimer);
   },
 
   /* ---------- 数据组装（与 Web 端编辑器逻辑一致） ---------- */
@@ -157,7 +164,7 @@ Page({
   /* ---------- 渲染 ---------- */
 
   renderNow() {
-    if (!this.canvas || !this.ctx) return;
+    if (!this.canvas || !this.ctx || this.unloaded) return;
     const app = getApp();
     const env = app.globalData.env;
     const registry = env.get();
