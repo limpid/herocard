@@ -130,11 +130,14 @@
 
 .photo-pair {
   display: flex;
-  gap: 16rpx;
 }
 
 .photo-pair .upload-btn {
   flex: 1;
+}
+
+.photo-pair .upload-btn:first-child {
+  margin-right: 16rpx;
 }
 
 /* 滑杆 */
@@ -182,8 +185,11 @@
 /* 报价明细行 */
 .quote-item {
   display: flex;
-  gap: 14rpx;
   margin-bottom: 16rpx;
+}
+
+.quote-item > .field-input + .field-input {
+  margin-left: 14rpx;
 }
 
 /* 批量表格 */
@@ -191,7 +197,14 @@
 .table-row {
   display: flex;
   align-items: center;
-  gap: 12rpx;
+}
+
+.table-head > text + text,
+.table-head > view + view,
+.table-row > input + input,
+.table-row > input + view,
+.table-row > view + input {
+  margin-left: 12rpx;
 }
 
 .table-head {
@@ -253,11 +266,15 @@
   right: 0;
   bottom: 0;
   display: flex;
-  gap: 18rpx;
-  padding: 18rpx 24rpx calc(18rpx + env(safe-area-inset-bottom));
+  padding: 18rpx 24rpx 18rpx;
+  padding-bottom: calc(18rpx + env(safe-area-inset-bottom));
   background: rgba(255, 255, 255, 0.96);
   border-top: 1rpx solid #e8e7f0;
   box-shadow: 0 -6rpx 24rpx rgba(46, 43, 79, 0.06);
+}
+
+.actions .btn-share {
+  margin-right: 18rpx;
 }
 
 .btn-share {

@@ -36,8 +36,11 @@
 
 .chips {
   display: flex;
-  gap: 14rpx;
   margin: 30rpx 0 26rpx;
+}
+
+.chip + .chip {
+  margin-left: 14rpx;
 }
 
 .chip {
@@ -84,13 +87,15 @@
 .grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 20rpx;
+  justify-content: space-between;
 }
 
 .card {
-  width: calc(50% - 10rpx);
+  /* 固定 rpx 宽度（calc 混合 % 与 rpx 在真机上失效） */
+  width: 337rpx;
   box-sizing: border-box;
   padding: 24rpx 22rpx 20rpx;
+  margin-bottom: 20rpx;
   background: #ffffff;
   border: 1rpx solid rgba(232, 231, 240, 0.95);
   border-radius: 22rpx;
