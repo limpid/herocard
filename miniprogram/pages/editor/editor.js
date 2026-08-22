@@ -25,7 +25,8 @@ Page({
     hasPhotoB: false,
     logoWatermark: false,
     logoMode: 'tile',
-    logoSrc: ''
+    logoSrc: '',
+    groupTemplates: []
   },
 
   onLoad(options) {
@@ -58,7 +59,12 @@ Page({
       form: form,
       cw: cw,
       ch: ch,
-      safeBottom: safeBottom
+      safeBottom: safeBottom,
+      groupTemplates: Object.keys(map).map((key) => ({
+        key: key,
+        name: map[key].name,
+        selected: key === tplKey
+      }))
     });
     wx.setNavigationBarTitle({ title: meta.name + ' · 星风暴人物卡片生成器' });
 
@@ -370,8 +376,12 @@ Page({
     if (!this.canvas || !this.ctx || this.unloaded) return;
     const app = getApp();
     const env = app.globalData.env;
-    const registry = env.get();
-    const template = registry[this.data.group][this.data.tplKey];
+    this.renderTemplateTo(env.get(), env.helpers(), this.data.tplKey);
+  },
+
+  /** 用当前配置渲染指定模板到画布（供预览与批量生成复用） */
+  renderTemplateTo(registry, helpers, tplKey) {
+    const template = registry[this.data.group][tplKey];
     if (!template) return;
 
     const parts = this.data.sizeKey.split('x');
@@ -386,7 +396,6 @@ Page({
     ctx.imageSmoothingEnabled = true;
     ctx.imageSmoothingQuality = 'high';
 
-    const helpers = env.helpers();
     helpers.setDrawingContext(ctx);
     if (helpers.consumeBioOverflow) helpers.consumeBioOverflow();
     ctx.clearRect(0, 0, 900, 1200);
@@ -515,18 +524,101 @@ Page({
     this.scheduleRender();
   },
 
+  /* ---------- 批量生成 ---------- */
+
+  onToggleTpl(event) {
+    const key = event.currentTarget.dataset.key;
+    const list = this.data.groupTemplates.map((t) => (
+      t.key === key ? { key: t.key, name: t.name, selected: !t.selected } : t
+    ));
+    this.setData({ groupTemplates: list });
+  },
+
   /* ---------- 保存与分享 ---------- */
 
   onSave() {
     if (!this.canvas) return;
-    this.renderNow();
-    wx.showLoading({ title: '正在保存', mask: true });
-    canvasUtil.saveToAlbum(this.canvas).then(() => {
+    const selected = this.data.groupTemplates.filter((t) => t.selected);
+    if (!selected.length) {
+      wx.showToast({ title: '请至少选择一个模板', icon: 'none' });
+      return;
+    }
+
+    // 仅当前模板：走原有单张保存
+    if (selected.length === 1 && selected[0].key === this.data.tplKey) {
+      this.renderNow();
+      wx.showLoading({ title: '正在保存', mask: true });
+      canvasUtil.saveToAlbum(this.canvas).then(() => {
+        wx.hideLoading();
+        wx.showToast({ title: '已保存到相册', icon: 'success' });
+      }).catch(() => {
+        wx.hideLoading();
+      });
+      return;
+    }
+
+    // 多个模板：同一配置逐个渲染并保存
+    this.saveBatch(selected);
+  },
+
+  saveBatch(selected) {
+    const app = getApp();
+    const env = app.globalData.env;
+    const registry = env.get();
+    const helpers = env.helpers();
+    const total = selected.length;
+
+    wx.showLoading({ title: '正在保存 1/' + total, mask: true });
+
+    const run = (i) => {
+      if (i >= total) {
+        wx.hideLoading();
+        wx.showToast({ title: total + ' 张卡片已保存', icon: 'success' });
+        this.renderNow();
+        return Promise.resolve();
+      }
+      // 批量生成同样计入该模板的使用次数
+      try { app.globalData.usage.record(this.data.group, selected[i].key); } catch (e) { /* 忽略 */ }
+      return this.renderAndSave(registry, helpers, selected[i].key).then(() => {
+        if (i < total - 1) {
+          wx.showLoading({ title: '正在保存 ' + (i + 2) + '/' + total, mask: true });
+        }
+        return run(i + 1);
+      });
+    };
+
+    run(0).catch((err) => {
       wx.hideLoading();
-      wx.showToast({ title: '已保存到相册', icon: 'success' });
-    }).catch(() => {
-      wx.hideLoading();
+      const denied = err && err.errMsg && err.errMsg.indexOf('auth') > -1;
+      if (!denied) {
+        wx.showToast({ title: '保存中断，请重试', icon: 'none' });
+      }
+      this.renderNow();
     });
+  },
+
+  /** 渲染指定模板并保存到相册，返回 Promise */
+  renderAndSave(registry, helpers, tplKey) {
+    this.renderTemplateTo(registry, helpers, tplKey);
+    return canvasUtil.toTempFile(this.canvas).then((tempPath) => new Promise((resolve, reject) => {
+      wx.saveImageToPhotosAlbum({
+        filePath: tempPath,
+        success: resolve,
+        fail: (err) => {
+          const denied = err && err.errMsg && err.errMsg.indexOf('auth') > -1;
+          if (denied) {
+            wx.hideLoading();
+            wx.showModal({
+              title: '需要相册权限',
+              content: '请在设置中开启「保存到相册」权限后重试',
+              confirmText: '去设置',
+              success: (r) => { if (r.confirm) wx.openSetting(); }
+            });
+          }
+          reject(err);
+        }
+      });
+    }));
   },
 
   onShareAppMessage() {

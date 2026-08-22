@@ -264,6 +264,26 @@
     </view>
   </view>
 
+  <!-- 批量生成 -->
+  <view class="panel">
+    <view class="panel-title">批量生成</view>
+    <view class="batch-desc">用当前配置同时生成所选模板的卡片，一次保存到相册</view>
+    <view class="batch-grid">
+      <view
+        wx:for="{{groupTemplates}}"
+        wx:key="key"
+        class="batch-item {{item.selected ? 'is-selected' : ''}}"
+        data-key="{{item.key}}"
+        bindtap="onToggleTpl"
+      >
+        <view class="batch-cell">
+          <text class="batch-name">{{item.name}}</text>
+        </view>
+        <view class="batch-check" wx:if="{{item.selected}}">✓</view>
+      </view>
+    </view>
+  </view>
+
   <view class="site-footer">星风暴提供技术支持服务</view>
 
   <view class="actions-space"></view>
