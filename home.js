@@ -11,7 +11,7 @@
     bio: '林知夏，独立生活方式创作者与视觉策划人。长期关注城市生活、美学空间与女性成长，擅长以温柔细腻的内容语言连接品牌与受众，曾与多个生活方式及旅行品牌深度合作。',
     footer: '明确合作类型、城市、时间与预算',
     contact: '商务合作：微信 StarBiz01',
-    watermark: '人物卡片',
+    watermark: '星风暴人物卡片生成器',
     themeKey: 'lavender',
     image: null,
     focusX: 50,
@@ -24,7 +24,7 @@
     tip: '报价仅供参考，以实际沟通为准',
     contact: '商务合作：微信 StarBiz01',
     footer: '点击联系经纪人，锁定心仪人选',
-    watermark: '人物卡片',
+    watermark: '星风暴人物卡片生成器',
     themeKey: 'lavender',
     imageA: null,
     imageB: null,
@@ -57,7 +57,7 @@
     tip: '以上报价不含差旅与制作费用，最终以合同为准',
     contact: '商务合作：微信 StarBiz01',
     footer: '明星经纪 · 一对一服务',
-    watermark: '人物卡片',
+    watermark: '星风暴人物卡片生成器',
     themeKey: 'lavender'
   };
 
@@ -78,7 +78,7 @@
     ],
     contact: '联系人：李经理 138-0000-0000',
     footer: '明星经纪 · 报价以最终合同为准',
-    watermark: '人物卡片',
+    watermark: '星风暴人物卡片生成器',
     themeKey: 'lavender'
   };
 

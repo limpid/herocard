@@ -297,11 +297,13 @@ body.js-loading .showcase { opacity: 0; }
 }
 
 @media (max-width: 760px) {
-  .showcase { display: flex; flex-direction: column; gap: 24px; }
+  .showcase { display: flex; flex-direction: column; gap: 24px; align-items: stretch; }
   .showcase-preview .canvas-stage { max-width: 430px; margin: 0 auto; }
-  .showcase-cta { max-width: 430px; }
+  .showcase-cta { width: fit-content; max-width: 100%; margin-left: auto; margin-right: auto; }
   .tabs { margin-bottom: 20px; }
 }
+
+.site-footer { padding: 2px 16px 44px; text-align: center; color: var(--text-secondary); font-size: 12.5px; letter-spacing: 0.05em; }
 
 .mobile-bar { display: none; }
 .preview-modal { position: fixed; inset: 0; z-index: 70; background: rgba(18, 18, 28, 0.95); display: flex; flex-direction: column; padding: 14px 14px calc(14px + env(safe-area-inset-bottom)); }
