@@ -20,7 +20,8 @@ Page({
     form: {},
     hasPhoto: false,
     hasPhotoA: false,
-    hasPhotoB: false
+    hasPhotoB: false,
+    logoWatermark: true
   },
 
   onLoad(options) {
@@ -61,6 +62,12 @@ Page({
     this.renderTimer = null;
     this.canvas = null;
     this.ctx = null;
+    this.logoImg = null;
+
+    // 记住用户对图片水印的开关选择
+    try {
+      this.setData({ logoWatermark: wx.getStorageSync('herocard-logo-wm') !== 'off' });
+    } catch (e) { /* 保持默认开 */ }
   },
 
   onReady() {
@@ -69,8 +76,59 @@ Page({
       if (this.unloaded || !res) return;
       this.canvas = res.canvas;
       this.ctx = res.canvas.getContext('2d');
+      this.loadDefaultLogo();
       this.renderNow();
     });
+  },
+
+  /* ---------- 图片水印 ---------- */
+
+  loadDefaultLogo() {
+    // 包内默认 logo：assets/star_storm_logo_64x64.png（不存在时静默禁用）
+    canvasUtil.loadImage(this.canvas, '/assets/star_storm_logo_64x64.png')
+      .then((img) => { this.logoImg = img; this.renderNow(); })
+      .catch(() => { /* 无默认图时不启用 */ });
+  },
+
+  onLogoWatermarkToggle(event) {
+    const on = event.detail.value;
+    this.setData({ logoWatermark: on });
+    try { wx.setStorageSync('herocard-logo-wm', on ? 'on' : 'off'); } catch (e) { /* 忽略 */ }
+    this.renderNow();
+  },
+
+  onChooseLogo() {
+    wx.chooseMedia({
+      count: 1,
+      mediaType: ['image'],
+      sizeType: ['original'],
+      success: (res) => {
+        canvasUtil.loadImage(this.canvas, res.tempFiles[0].tempFilePath)
+          .then((img) => {
+            this.logoImg = img;
+            if (!this.data.logoWatermark) this.setData({ logoWatermark: true });
+            this.renderNow();
+            wx.showToast({ title: '水印图片已更换', icon: 'none' });
+          })
+          .catch(() => wx.showToast({ title: '图片读取失败', icon: 'none' }));
+      }
+    });
+  },
+
+  /** 在 900×1200 逻辑坐标系内平铺 -30° 图片水印（与文字水印风格一致） */
+  drawImageWatermark(ctx, img) {
+    ctx.save();
+    ctx.rotate(-Math.PI / 6);
+    ctx.globalAlpha = 0.13;
+    const size = 52;
+    const gapX = 210;
+    const gapY = 150;
+    for (let y = -1000; y < 2300; y += gapY) {
+      for (let x = -800; x < 1800; x += gapX) {
+        ctx.drawImage(img, x, y, size, size);
+      }
+    }
+    ctx.restore();
   },
 
   onUnload() {
@@ -189,6 +247,9 @@ Page({
     if (helpers.consumeBioOverflow) helpers.consumeBioOverflow();
     ctx.clearRect(0, 0, 900, 1200);
     template.render(ctx, this.buildData(), helpers);
+    if (this.data.logoWatermark && this.logoImg) {
+      this.drawImageWatermark(ctx, this.logoImg);
+    }
     ctx.setTransform(1, 0, 0, 1, 0, 0);
   },
 

@@ -1,5 +1,5 @@
 {
-  "libVersion": "2.33.0",
+  "libVersion": "3.16.2",
   "projectname": "miniprogram",
   "setting": {
     "urlCheck": false,
@@ -17,5 +17,18 @@
     "checkInvalidKey": true,
     "ignoreDevUnusedFiles": true,
     "bigPackageSizeSupport": false
+  },
+  "condition": {
+    "miniprogram": {
+      "list": [
+        {
+          "name": "pages/editor/editor",
+          "pathName": "pages/editor/editor",
+          "query": "g=single&t=classic",
+          "scene": null,
+          "launchMode": "default"
+        }
+      ]
+    }
   }
 }
