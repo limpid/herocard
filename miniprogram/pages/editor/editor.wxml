@@ -160,7 +160,7 @@
         <input class="field-input" value="{{form.tag}}" data-field="tag" bindinput="onField" placeholder="如：影视演员" />
       </view>
       <view class="panel-title sub">报价明细（四项）</view>
-      <view class="quote-item" wx:for="{{form.items}}" wx:key="index">
+      <view class="quote-item" wx:for="{{form.items}}">
         <input class="field-input flex" value="{{item.name}}" data-ii="{{index}}" data-fi="name" bindinput="onItemField" placeholder="项目{{index + 1}}名称" />
         <input class="field-input narrow" value="{{item.price}}" data-ii="{{index}}" data-fi="price" bindinput="onItemField" placeholder="价格" />
       </view>
@@ -198,7 +198,7 @@
         <text class="narrow">作品</text>
         <text class="op">操作</text>
       </view>
-      <view class="table-row" wx:for="{{form.rows}}" wx:key="index">
+      <view class="table-row" wx:for="{{form.rows}}">
         <input class="field-input flex" value="{{item.a}}" data-ri="{{index}}" data-fi="a" bindinput="onRowField" placeholder="姓名" />
         <input class="field-input narrow" value="{{item.b}}" data-ri="{{index}}" data-fi="b" bindinput="onRowField" placeholder="报价" />
         <input class="field-input narrow" value="{{item.c}}" data-ri="{{index}}" data-fi="c" bindinput="onRowField" placeholder="作品" />
