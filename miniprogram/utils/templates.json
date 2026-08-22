@@ -1,0 +1,170 @@
+{
+  "single": {
+    "classic": {
+      "name": "经典图文",
+      "tagline": "照片与资料分区呈现，信息完整均衡"
+    },
+    "magazine": {
+      "name": "杂志封面",
+      "tagline": "满版照片配超大标题，视觉冲击力最强"
+    },
+    "minimal": {
+      "name": "极简留白",
+      "tagline": "大图居中与大量留白，突出人物气质"
+    },
+    "poster": {
+      "name": "大字海报",
+      "tagline": "深色底与超大字号，一眼记住名字"
+    },
+    "cinema": {
+      "name": "电影片头",
+      "tagline": "满幅银幕形象与醒目合作入口"
+    },
+    "social": {
+      "name": "社交渐变",
+      "tagline": "大图卡片与鲜明联系按钮，亲和吸睛"
+    },
+    "press": {
+      "name": "报章黑白",
+      "tagline": "整版人物特写与报纸排版，可信复古"
+    },
+    "glass": {
+      "name": "通透玻璃",
+      "tagline": "渐变底色配半透明面板，现代通透"
+    },
+    "ink": {
+      "name": "竖排雅致",
+      "tagline": "大图竖排与朱印点缀，东方韵味"
+    },
+    "dossier": {
+      "name": "档案编号",
+      "tagline": "档案卡式信息陈列，冷静专业"
+    }
+  },
+  "compare": {
+    "split-vs": {
+      "name": "对垒分屏",
+      "tagline": "对角线分屏与中央 VS，对抗感最强"
+    },
+    "spotlight": {
+      "name": "焦点对决",
+      "tagline": "双聚光灯圆形头像，报价大字陈列"
+    },
+    "ranking": {
+      "name": "榜单对决",
+      "tagline": "白卡并列与醒目报价条，一目了然"
+    },
+    "stacked": {
+      "name": "上下对台",
+      "tagline": "上下双舞台与中带 VS，纵向对比"
+    },
+    "clash": {
+      "name": "撞色渐变",
+      "tagline": "左右撞色渐变与悬浮白卡，明快抢眼"
+    },
+    "neon": {
+      "name": "电竞霓虹",
+      "tagline": "霓虹描边与倾斜相框，热血电竞感"
+    },
+    "press-duel": {
+      "name": "报纸对决",
+      "tagline": "黑白双栏与报纸刊头，可信复古"
+    },
+    "glass-vs": {
+      "name": "玻璃对决",
+      "tagline": "双玻璃面板与通透 VS，现代质感"
+    },
+    "dossier-compare": {
+      "name": "档案对比",
+      "tagline": "双档案卡与条形码，冷静专业"
+    },
+    "vote": {
+      "name": "票选对决",
+      "tagline": "选票式排版与勾选框，引导用户决策"
+    }
+  },
+  "quote": {
+    "price-list": {
+      "name": "价目单",
+      "tagline": "简洁价目排版，报价一目了然"
+    },
+    "menu": {
+      "name": "菜单报价",
+      "tagline": "菜单式排版与椭圆相框，典雅有格调"
+    },
+    "luxury": {
+      "name": "奢华拱窗",
+      "tagline": "深色底与拱形大图，高端商务感"
+    },
+    "ticket": {
+      "name": "票据报价",
+      "tagline": "票据打孔与条形码，形式感十足"
+    },
+    "modern": {
+      "name": "渐变横幅",
+      "tagline": "渐变底与横幅大图，现代明快"
+    },
+    "magazine": {
+      "name": "杂志分栏",
+      "tagline": "左图右文杂志分栏，编辑气质"
+    },
+    "grid": {
+      "name": "极简数字",
+      "tagline": "超大报价数字矩阵，视觉冲击"
+    },
+    "glass": {
+      "name": "玻璃报价",
+      "tagline": "通透玻璃面板，轻盈现代"
+    },
+    "dossier": {
+      "name": "报价档案",
+      "tagline": "档案卡式明细表，冷静专业"
+    },
+    "ink": {
+      "name": "中式红笺",
+      "tagline": "朱红点缀与雅致留白，东方韵味"
+    }
+  },
+  "batch": {
+    "classic-table": {
+      "name": "经典蓝表",
+      "tagline": "色带表头与斑马纹行，干净利落"
+    },
+    "dark-table": {
+      "name": "暗夜行情",
+      "tagline": "深色底高对比，报价一目了然"
+    },
+    "gradient-header": {
+      "name": "渐变榜头",
+      "tagline": "大渐变题头，现代醒目"
+    },
+    "minimal-lines": {
+      "name": "极简线表",
+      "tagline": "细线与大留白，安静有力"
+    },
+    "chart-list": {
+      "name": "榜单排行",
+      "tagline": "序号榜单式排版，杂志气质"
+    },
+    "press-table": {
+      "name": "报纸行情",
+      "tagline": "报纸行情版式，复古可信"
+    },
+    "card-rows": {
+      "name": "卡片行组",
+      "tagline": "圆角卡片行与价签，现代轻快"
+    },
+    "banner-table": {
+      "name": "撞色横幅",
+      "tagline": "撞色色块，视觉冲击强烈"
+    },
+    "glass-table": {
+      "name": "玻璃行情",
+      "tagline": "渐变底玻璃面板，通透精致"
+    },
+    "ink-table": {
+      "name": "中式雅表",
+      "tagline": "朱红表头与衬线，东方韵味"
+    }
+  }
+}

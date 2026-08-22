@@ -1,0 +1,64 @@
+const schema = require('../../utils/schema.js');
+
+const groupsWithCount = schema.groups.map((group) => ({
+  key: group.key,
+  name: group.name,
+  desc: group.desc,
+  count: Object.keys(schema.templates[group.key]).length
+}));
+
+Page({
+  data: {
+    groups: groupsWithCount,
+    activeGroup: 'single',
+    templates: [],
+    shareTemplate: null
+  },
+
+  onLoad(options) {
+    // 支持从分享卡片直达：?g=compare&t=split-vs
+    if (options && options.g && options.t) {
+      const list = schema.templates[options.g];
+      if (list && list[options.t]) {
+        wx.redirectTo({
+          url: '/pages/editor/editor?g=' + options.g + '&t=' + options.t
+        });
+        return;
+      }
+    }
+    this.applyGroup(options && options.g ? options.g : 'single');
+  },
+
+  applyGroup(groupKey) {
+    const group = schema.groups.some((g) => g.key === groupKey) ? groupKey : 'single';
+    const map = schema.templates[group];
+    const templates = Object.keys(map).map((key) => ({
+      key: key,
+      name: map[key].name,
+      tagline: map[key].tagline
+    }));
+    this.setData({ activeGroup: group, templates: templates });
+  },
+
+  onSwitchGroup(event) {
+    const group = event.currentTarget.dataset.group;
+    if (group === this.data.activeGroup) return;
+    this.applyGroup(group);
+  },
+
+  onOpenTemplate(event) {
+    const { g, t } = event.currentTarget.dataset;
+    wx.navigateTo({ url: '/pages/editor/editor?g=' + g + '&t=' + t });
+  },
+
+  onShareAppMessage() {
+    return {
+      title: '星风暴人物卡片生成器 · 40 款明星卡片模板',
+      path: '/pages/index/index'
+    };
+  },
+
+  onShareTimeline() {
+    return { title: '星风暴人物卡片生成器 · 40 款明星卡片模板' };
+  }
+});

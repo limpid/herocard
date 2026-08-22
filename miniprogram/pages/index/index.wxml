@@ -1,0 +1,38 @@
+<view class="page">
+  <view class="hero">
+    <view class="hero-eyebrow">TEMPLATE GALLERY</view>
+    <view class="hero-title">星风暴人物卡片生成器</view>
+    <view class="hero-desc">上传照片、填写文字，实时预览并导出高清卡片。单人介绍、明星对比、明星报价、批量报价，40 款风格模板一键生成。</view>
+  </view>
+
+  <view class="chips">
+    <view
+      wx:for="{{groups}}"
+      wx:key="key"
+      class="chip {{activeGroup === item.key ? 'is-active' : ''}}"
+      data-group="{{item.key}}"
+      bindtap="onSwitchGroup"
+    >
+      <text class="chip-name">{{item.name}}</text>
+      <text class="chip-count">{{item.count}}</text>
+    </view>
+  </view>
+
+  <view class="grid">
+    <view
+      wx:for="{{templates}}"
+      wx:key="key"
+      class="card"
+      data-g="{{activeGroup}}"
+      data-t="{{item.key}}"
+      bindtap="onOpenTemplate"
+    >
+      <view class="card-index">{{index + 1 < 10 ? '0' : ''}}{{index + 1}}</view>
+      <view class="card-name">{{item.name}}</view>
+      <view class="card-tagline">{{item.tagline}}</view>
+      <view class="card-cta">去制作 →</view>
+    </view>
+  </view>
+
+  <view class="site-footer">星风暴提供技术支持服务</view>
+</view>

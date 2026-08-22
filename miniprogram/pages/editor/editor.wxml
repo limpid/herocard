@@ -1,0 +1,256 @@
+<view class="page">
+  <view class="preview-wrap">
+    <canvas type="2d" id="card" class="preview" style="width:{{cw}}px;height:{{ch}}px"></canvas>
+    <view class="preview-meta">
+      <text>{{tplName}}</text>
+      <text class="preview-size">{{sizeLabel}} px</text>
+    </view>
+  </view>
+
+  <!-- 单人介绍 -->
+  <block wx:if="{{group === 'single'}}">
+    <view class="panel">
+      <view class="panel-title">人物照片</view>
+      <button class="upload-btn {{hasPhoto ? 'is-done' : ''}}" bindtap="onChoosePhoto">
+        {{hasPhoto ? '重新选择照片' : '上传人物照片'}}
+      </button>
+      <block wx:if="{{hasPhoto}}">
+        <view class="slider-row">
+          <text class="slider-label">缩放 {{form.zoom}}%</text>
+          <slider min="60" max="150" step="1" value="{{form.zoom}}" data-field="zoom" bindchanging="onSlider" activeColor="#6e6ae9" />
+        </view>
+        <view class="slider-row">
+          <text class="slider-label">上下位置 {{form.focusY}}%</text>
+          <slider min="0" max="100" step="1" value="{{form.focusY}}" data-field="focusY" bindchanging="onSlider" activeColor="#6e6ae9" />
+        </view>
+      </block>
+    </view>
+
+    <view class="panel">
+      <view class="panel-title">人物资料</view>
+      <view class="field">
+        <view class="field-label">姓名</view>
+        <input class="field-input" value="{{form.name}}" data-field="name" bindinput="onField" placeholder="填写姓名" />
+      </view>
+      <view class="field">
+        <view class="field-label">身份标签</view>
+        <input class="field-input" value="{{form.role}}" data-field="role" bindinput="onField" placeholder="如：生活方式创作者" />
+      </view>
+      <view class="field">
+        <view class="field-label">重点信息</view>
+        <input class="field-input" value="{{form.price}}" data-field="price" bindinput="onField" placeholder="如：合作预算：8万起" />
+      </view>
+      <view class="field">
+        <view class="field-label">提示语</view>
+        <input class="field-input" value="{{form.tip}}" data-field="tip" bindinput="onField" placeholder="报价说明等" />
+      </view>
+      <view class="field">
+        <view class="field-label">人物介绍</view>
+        <textarea class="field-textarea" value="{{form.bio}}" data-field="bio" bindinput="onField" maxlength="220" placeholder="人物经历、特点与代表作品" />
+      </view>
+    </view>
+  </block>
+
+  <!-- 明星对比 -->
+  <block wx:if="{{group === 'compare'}}">
+    <view class="panel">
+      <view class="panel-title">对比照片</view>
+      <view class="photo-pair">
+        <button class="upload-btn small {{hasPhotoA ? 'is-done' : ''}}" bindtap="onChoosePhotoA">
+          {{hasPhotoA ? '重选 A 照片' : '上传 A 照片'}}
+        </button>
+        <button class="upload-btn small {{hasPhotoB ? 'is-done' : ''}}" bindtap="onChoosePhotoB">
+          {{hasPhotoB ? '重选 B 照片' : '上传 B 照片'}}
+        </button>
+      </view>
+      <block wx:if="{{hasPhotoA}}">
+        <view class="slider-row">
+          <text class="slider-label">A 缩放 {{form.zoomA}}%</text>
+          <slider min="60" max="150" step="1" value="{{form.zoomA}}" data-field="zoomA" bindchanging="onSlider" activeColor="#6e6ae9" />
+        </view>
+        <view class="slider-row">
+          <text class="slider-label">A 上下位置 {{form.focusYA}}%</text>
+          <slider min="0" max="100" step="1" value="{{form.focusYA}}" data-field="focusYA" bindchanging="onSlider" activeColor="#6e6ae9" />
+        </view>
+      </block>
+      <block wx:if="{{hasPhotoB}}">
+        <view class="slider-row">
+          <text class="slider-label">B 缩放 {{form.zoomB}}%</text>
+          <slider min="60" max="150" step="1" value="{{form.zoomB}}" data-field="zoomB" bindchanging="onSlider" activeColor="#6e6ae9" />
+        </view>
+        <view class="slider-row">
+          <text class="slider-label">B 上下位置 {{form.focusYB}}%</text>
+          <slider min="0" max="100" step="1" value="{{form.focusYB}}" data-field="focusYB" bindchanging="onSlider" activeColor="#6e6ae9" />
+        </view>
+      </block>
+    </view>
+
+    <view class="panel">
+      <view class="panel-title">对比信息</view>
+      <view class="field">
+        <view class="field-label">标题</view>
+        <input class="field-input" value="{{form.title}}" data-field="title" bindinput="onField" placeholder="如：代言人对比" />
+      </view>
+      <view class="field">
+        <view class="field-label">提示语</view>
+        <input class="field-input" value="{{form.tip}}" data-field="tip" bindinput="onField" placeholder="报价仅供参考" />
+      </view>
+      <view class="field">
+        <view class="field-label">A 姓名</view>
+        <input class="field-input" value="{{form.nameA}}" data-field="nameA" bindinput="onField" placeholder="明星 A 姓名" />
+      </view>
+      <view class="field">
+        <view class="field-label">A 身份</view>
+        <input class="field-input" value="{{form.tagA}}" data-field="tagA" bindinput="onField" placeholder="如：影视演员" />
+      </view>
+      <view class="field">
+        <view class="field-label">A 出场费</view>
+        <input class="field-input" value="{{form.feeA}}" data-field="feeA" bindinput="onField" placeholder="如：出场费 80万/场" />
+      </view>
+      <view class="field">
+        <view class="field-label">B 姓名</view>
+        <input class="field-input" value="{{form.nameB}}" data-field="nameB" bindinput="onField" placeholder="明星 B 姓名" />
+      </view>
+      <view class="field">
+        <view class="field-label">B 身份</view>
+        <input class="field-input" value="{{form.tagB}}" data-field="tagB" bindinput="onField" placeholder="如：全能艺人" />
+      </view>
+      <view class="field">
+        <view class="field-label">B 出场费</view>
+        <input class="field-input" value="{{form.feeB}}" data-field="feeB" bindinput="onField" placeholder="如：出场费 120万/场" />
+      </view>
+    </view>
+  </block>
+
+  <!-- 明星报价 -->
+  <block wx:if="{{group === 'quote'}}">
+    <view class="panel">
+      <view class="panel-title">明星照片</view>
+      <button class="upload-btn {{hasPhoto ? 'is-done' : ''}}" bindtap="onChoosePhoto">
+        {{hasPhoto ? '重新选择照片' : '上传明星照片'}}
+      </button>
+      <block wx:if="{{hasPhoto}}">
+        <view class="slider-row">
+          <text class="slider-label">缩放 {{form.zoom}}%</text>
+          <slider min="60" max="150" step="1" value="{{form.zoom}}" data-field="zoom" bindchanging="onSlider" activeColor="#6e6ae9" />
+        </view>
+        <view class="slider-row">
+          <text class="slider-label">上下位置 {{form.focusY}}%</text>
+          <slider min="0" max="100" step="1" value="{{form.focusY}}" data-field="focusY" bindchanging="onSlider" activeColor="#6e6ae9" />
+        </view>
+      </block>
+    </view>
+
+    <view class="panel">
+      <view class="panel-title">报价信息</view>
+      <view class="field">
+        <view class="field-label">标题</view>
+        <input class="field-input" value="{{form.title}}" data-field="title" bindinput="onField" placeholder="商务合作报价单" />
+      </view>
+      <view class="field">
+        <view class="field-label">有效期</view>
+        <input class="field-input" value="{{form.validity}}" data-field="validity" bindinput="onField" placeholder="报价有效期：30天" />
+      </view>
+      <view class="field">
+        <view class="field-label">明星姓名</view>
+        <input class="field-input" value="{{form.name}}" data-field="name" bindinput="onField" placeholder="明星姓名" />
+      </view>
+      <view class="field">
+        <view class="field-label">身份标签</view>
+        <input class="field-input" value="{{form.tag}}" data-field="tag" bindinput="onField" placeholder="如：影视演员" />
+      </view>
+      <view class="panel-title sub">报价明细（四项）</view>
+      <view class="quote-item" wx:for="{{form.items}}" wx:key="index">
+        <input class="field-input flex" value="{{item.name}}" data-ii="{{index}}" data-fi="name" bindinput="onItemField" placeholder="项目{{index + 1}}名称" />
+        <input class="field-input narrow" value="{{item.price}}" data-ii="{{index}}" data-fi="price" bindinput="onItemField" placeholder="价格" />
+      </view>
+      <view class="field">
+        <view class="field-label">备注说明</view>
+        <input class="field-input" value="{{form.tip}}" data-field="tip" bindinput="onField" placeholder="报价备注说明" />
+      </view>
+    </view>
+  </block>
+
+  <!-- 批量报价 -->
+  <block wx:if="{{group === 'batch'}}">
+    <view class="panel">
+      <view class="panel-title">表格标题</view>
+      <view class="field">
+        <view class="field-label">标题</view>
+        <input class="field-input" value="{{form.title}}" data-field="title" bindinput="onField" placeholder="明星艺人商务报价表" />
+      </view>
+    </view>
+
+    <view class="panel">
+      <view class="panel-title">列名（自定义）</view>
+      <view class="quote-item">
+        <input class="field-input flex" value="{{form.columns[0]}}" data-ci="0" bindinput="onColumnField" placeholder="列 1" />
+        <input class="field-input narrow" value="{{form.columns[1]}}" data-ci="1" bindinput="onColumnField" placeholder="列 2" />
+        <input class="field-input narrow" value="{{form.columns[2]}}" data-ci="2" bindinput="onColumnField" placeholder="列 3" />
+      </view>
+    </view>
+
+    <view class="panel">
+      <view class="panel-title">报价行（4–16 行）</view>
+      <view class="table-head">
+        <text class="flex">明星</text>
+        <text class="narrow">报价</text>
+        <text class="narrow">作品</text>
+        <text class="op">操作</text>
+      </view>
+      <view class="table-row" wx:for="{{form.rows}}" wx:key="index">
+        <input class="field-input flex" value="{{item.a}}" data-ri="{{index}}" data-fi="a" bindinput="onRowField" placeholder="姓名" />
+        <input class="field-input narrow" value="{{item.b}}" data-ri="{{index}}" data-fi="b" bindinput="onRowField" placeholder="报价" />
+        <input class="field-input narrow" value="{{item.c}}" data-ri="{{index}}" data-fi="c" bindinput="onRowField" placeholder="作品" />
+        <view class="row-del" data-ri="{{index}}" bindtap="removeRow">×</view>
+      </view>
+      <button class="ghost-btn" bindtap="addRow">+ 添加一行</button>
+    </view>
+  </block>
+
+  <!-- 公共设置 -->
+  <view class="panel">
+    <view class="panel-title">样式与水印</view>
+    <view class="field">
+      <view class="field-label">水印文字</view>
+      <input class="field-input" value="{{form.watermark}}" data-field="watermark" bindinput="onField" maxlength="20" placeholder="留空则不显示水印" />
+    </view>
+    <view class="field">
+      <view class="field-label">合作联系方式</view>
+      <input class="field-input" value="{{form.contact}}" data-field="contact" bindinput="onField" maxlength="26" placeholder="如：洽谈代言合作 · 微信 xxx" />
+    </view>
+    <view class="field">
+      <view class="field-label">底部说明</view>
+      <input class="field-input" value="{{form.footer}}" data-field="footer" bindinput="onField" placeholder="填写底部说明文字" />
+    </view>
+    <view class="field">
+      <view class="field-label">配色</view>
+      <view class="theme-row">
+        <view
+          wx:for="{{themeOptions}}"
+          wx:key="key"
+          class="theme-dot {{themeKey === item.key ? 'is-active' : ''}}"
+          style="background: {{item.color}}"
+          data-key="{{item.key}}"
+          bindtap="onTheme"
+        >
+          <text class="theme-name">{{item.name}}</text>
+        </view>
+      </view>
+    </view>
+    <view class="field">
+      <view class="field-label">导出尺寸</view>
+      <picker mode="selector" range="{{sizeOptions}}" range-key="name" bindchange="onSize">
+        <view class="picker-value">{{sizeLabel}} px ▾</view>
+      </picker>
+    </view>
+  </view>
+
+  <view class="site-footer">星风暴提供技术支持服务</view>
+
+  <view class="actions-space"></view>
+  <view class="actions">
+    <button class="btn-share" open-type="share">分享</button>
+    <button class="btn-save" bindtap="onSave">保存到相册</button>
+  </view>
+</view>
