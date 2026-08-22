@@ -33,7 +33,8 @@ Page({
     // 点击进入模板即记一次使用（本地立即、后端异步上报，失败不影响使用）
     getApp().globalData.usage.record(group, tplKey);
 
-    const info = wx.getSystemInfoSync();
+    // 新 API 优先（getWindowInfo 同步返回），旧基础库回退 getSystemInfoSync
+    const info = wx.getWindowInfo ? wx.getWindowInfo() : wx.getSystemInfoSync();
     // 页面左右 padding 24rpx×2 + 预览容器 padding 16rpx×2（rpx → px 按 750 基准换算）
     const insets = Math.ceil(info.windowWidth / 750 * 80);
     const cw = Math.round(info.windowWidth - insets);
