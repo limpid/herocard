@@ -1,2 +1,4 @@
-# 真实品牌 Logo 由使用者本地放置，不入版本库（避免 git pull 覆盖）
+# 品牌 Logo 由使用者本地放置，不入版本库（避免 git pull 覆盖）
+# 推荐命名：my-logo.png（git 永远不会触碰这个名字）
+assets/my-logo.png
 assets/star_storm_logo_64x64.png

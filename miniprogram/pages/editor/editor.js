@@ -87,9 +87,18 @@ Page({
   /* ---------- 图片水印 ---------- */
 
   loadDefaultLogo() {
-    // 优先加载包内真实 Logo（assets/star_storm_logo_64x64.png，读为 base64 规避包路径限制）；
-    // 文件不存在或加载失败时，回退到离屏 canvas 绘制的内置星形 Logo。
-    const path = '/assets/star_storm_logo_64x64.png';
+    // 依次尝试多个 Logo 路径：my-logo.png（用户专属名，git 永不触碰）
+    // → star_storm_logo_64x64.png → 均无则回退内置绘制。
+    this.tryLoadLogo(['/assets/my-logo.png', '/assets/star_storm_logo_64x64.png'], 0);
+  },
+
+  tryLoadLogo(paths, index) {
+    if (index >= paths.length) {
+      console.warn('[图片水印] assets/ 下未找到 Logo 文件（my-logo.png 或 star_storm_logo_64x64.png），已使用内置 Logo');
+      this.useBuiltinLogo();
+      return;
+    }
+    const path = paths[index];
     wx.getFileSystemManager().readFile({
       filePath: path,
       encoding: 'base64',
@@ -102,14 +111,11 @@ Page({
             this.renderNow();
           })
           .catch((e) => {
-            console.warn('[图片水印] 真实 Logo 解码失败，已回退内置 Logo：', e);
-            this.useBuiltinLogo();
+            console.warn('[图片水印] Logo 解码失败，尝试下一个路径：', path, e);
+            this.tryLoadLogo(paths, index + 1);
           });
       },
-      fail: (e) => {
-        console.warn('[图片水印] 未读取到 assets/star_storm_logo_64x64.png，已回退内置 Logo。请确认真实 Logo 已放入 miniprogram/assets/ 目录并重新编译：', e);
-        this.useBuiltinLogo();
-      }
+      fail: () => this.tryLoadLogo(paths, index + 1)
     });
   },
 
