@@ -528,10 +528,16 @@ Page({
 
   onToggleTpl(event) {
     const key = event.currentTarget.dataset.key;
+    const target = this.data.groupTemplates.find((t) => t.key === key);
+    const turningOn = target && !target.selected;
     const list = this.data.groupTemplates.map((t) => (
       t.key === key ? { key: t.key, name: t.name, selected: !t.selected } : t
     ));
     this.setData({ groupTemplates: list });
+    // 勾选即视为使用一次：立即计入（本地 + 后端异步上报）
+    if (turningOn) {
+      try { getApp().globalData.usage.record(this.data.group, key); } catch (e) { /* 忽略 */ }
+    }
   },
 
   /* ---------- 保存与分享 ---------- */
@@ -577,8 +583,7 @@ Page({
         this.renderNow();
         return Promise.resolve();
       }
-      // 批量生成同样计入该模板的使用次数
-      try { app.globalData.usage.record(this.data.group, selected[i].key); } catch (e) { /* 忽略 */ }
+      // 使用计数已在勾选时计入（onToggleTpl），此处不再重复计数
       return this.renderAndSave(registry, helpers, selected[i].key).then(() => {
         if (i < total - 1) {
           wx.showLoading({ title: '正在保存 ' + (i + 2) + '/' + total, mask: true });
