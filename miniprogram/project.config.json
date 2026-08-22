@@ -10,7 +10,7 @@
     "urlCheck": false,
     "coverView": true,
     "lazyloadPlaceholderEnable": false,
-    "ignoreUploadUnusedFiles": true,
+    "ignoreUploadUnusedFiles": false,
     "compileWorklet": false,
     "uglifyFileName": false,
     "uploadWithSourceMap": true,
