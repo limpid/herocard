@@ -1,34 +1,25 @@
 /**
- * 微信小程序环境垫片
- * 渲染器（vendor/ 目录下的 41 个文件）以 IIFE 方式挂载到 window 全局对象，
- * 小程序 AppService 没有浏览器 window，这里通过 globalThis 提供等价垫片，
- * 使渲染器源码可以与 Web 端完全一致、零修改复用。
+ * 小程序 window 垫片（模块注入模式）
  *
- * 注意：renderers.js 会整体替换 window.CARD_TEMPLATES，
- * 因此所有引用必须通过 get() 按需获取，不能缓存静态引用。
+ * 微信 AppService 沙箱中，模块内的自由变量 window 无法通过 globalThis 定义，
+ * 因此每个 vendor 渲染器文件头部都注入了一行：
+ *   var window = require('<相对路径>/utils/env.js');
+ * 渲染器源码（与 Web 端同源、零修改）中的 window.* 全部落到本模块导出的 shim 对象上。
+ *
+ * 注意：renderers.js 会整体替换 shim.CARD_TEMPLATES，
+ * 读取必须通过 __get() / __helpers() 按需获取。
  */
-(function () {
-  'use strict';
+var shim = {};
 
-  var host = typeof globalThis !== 'undefined'
-    ? globalThis
-    : (typeof global !== 'undefined' ? global : {});
-
-  if (typeof host.window === 'undefined') {
-    host.window = host;
-  }
-
-  module.exports = {
-    host: host,
-    get: function () {
-      return {
-        single: host.window.CARD_TEMPLATES || {},
-        compare: host.window.COMPARE_TEMPLATES || {},
-        quote: host.window.QUOTE_TEMPLATES || {},
-        batch: host.window.BATCH_TEMPLATES || {}
-      };
-    },
-    helpers: function () { return host.window.CARD_HELPERS; },
-    palettes: function () { return host.window.CARD_PALETTES; }
+shim.__get = function () {
+  return {
+    single: shim.CARD_TEMPLATES || {},
+    compare: shim.COMPARE_TEMPLATES || {},
+    quote: shim.QUOTE_TEMPLATES || {},
+    batch: shim.BATCH_TEMPLATES || {}
   };
-})();
+};
+
+shim.__helpers = function () { return shim.CARD_HELPERS; };
+
+module.exports = shim;

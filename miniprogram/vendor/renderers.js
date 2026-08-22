@@ -1,3 +1,4 @@
+var window = require('../utils/env.js');
 (function () {
   'use strict';
 

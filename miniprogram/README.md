@@ -39,15 +39,15 @@ miniprogram/
 
 ## 与 Web 端同步渲染器
 
-Web 端更新 `js/renderers.js` 或 `compare|quote|batch/*.js` 后，重新复制到 `vendor/` 并重新生成注册表：
+Web 端更新 `js/renderers.js` 或 `compare|quote|batch/*.js` 后，在仓库根目录执行：
 
 ```bash
-cp js/renderers.js miniprogram/vendor/renderers.js
-cp compare/*.js miniprogram/vendor/compare/
-cp quote/*.js miniprogram/vendor/quote/
-cp batch/*.js miniprogram/vendor/batch/
-# 然后在 miniprogram/ 下用 node 重新生成 utils/templates.json（见 utils/env.js 用法）
+node tools/sync-vendor.js
 ```
+
+脚本会自动完成：复制 41 个渲染器 → 注入 `var window = require('.../utils/env.js')` 垫片 → 重新提取 40 模板注册表并更新 `utils/schema.js`。
+
+> 垫片原理：微信 AppService 沙箱中模块作用域无法定义全局 `window`（渲染器 IIFE 里的 `window` 是 undefined），因此必须以模块级 `var window = require(...)` 注入，渲染器源码其余部分与 Web 端逐字节一致。
 
 ## 已知平台差异
 
