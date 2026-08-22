@@ -1,6 +1,5 @@
 const schema = require('../../utils/schema.js');
 const canvasUtil = require('../../utils/canvas.js');
-const usage = require('../../utils/usage.js');
 
 const RENDER_DEBOUNCE = 280;
 
@@ -32,7 +31,7 @@ Page({
     const form = JSON.parse(JSON.stringify(schema.defaults[group]));
 
     // 点击进入模板即记一次使用（本地立即、后端异步上报，失败不影响使用）
-    usage.record(group, tplKey);
+    getApp().globalData.usage.record(group, tplKey);
 
     const info = wx.getSystemInfoSync();
     // 页面左右 padding 24rpx×2 + 预览容器 padding 16rpx×2（rpx → px 按 750 基准换算）

@@ -1,5 +1,4 @@
 const schema = require('../../utils/schema.js');
-const usage = require('../../utils/usage.js');
 
 const groupsWithCount = schema.groups.map((group) => ({
   key: group.key,
@@ -33,6 +32,7 @@ Page({
   applyGroup(groupKey) {
     const group = schema.groups.some((g) => g.key === groupKey) ? groupKey : 'single';
     const map = schema.templates[group];
+    const usage = getApp().globalData.usage;
     const templates = Object.keys(map).map((key) => ({
       key: key,
       name: map[key].name,
@@ -44,6 +44,7 @@ Page({
 
   onShow() {
     // 每次回到主页刷新计数：先用缓存即时渲染，再异步拉取后端全局计数
+    const usage = getApp().globalData.usage;
     this.applyGroup(this.data.activeGroup);
     usage.fetchAll().then(() => {
       this.applyGroup(this.data.activeGroup);
