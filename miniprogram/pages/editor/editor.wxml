@@ -224,7 +224,7 @@
         <view class="logo-mode {{logoMode === 'tile' ? 'is-active' : ''}}" data-mode="tile" bindtap="onLogoMode">全图平铺</view>
         <view class="logo-mode {{logoMode === 'corner' ? 'is-active' : ''}}" data-mode="corner" bindtap="onLogoMode">左上角</view>
       </view>
-      <view class="logo-hint">点击缩略图可放大预览 · 默认星风暴 Logo{{logoMode === 'tile' ? '，斜向平铺覆盖整张卡片' : '，显示在卡片左上角'}}</view>
+      <view class="logo-hint">默认关闭 · 开启后使用星风暴 Logo{{logoMode === 'tile' ? '，斜向平铺覆盖整张卡片' : '，显示在卡片左上角'}}（可更换）· 点击缩略图放大预览</view>
     </view>
     <view class="field">
       <view class="field-label">水印文字</view>

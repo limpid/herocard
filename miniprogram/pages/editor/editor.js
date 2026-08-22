@@ -21,7 +21,7 @@ Page({
     hasPhoto: false,
     hasPhotoA: false,
     hasPhotoB: false,
-    logoWatermark: true,
+    logoWatermark: false,
     logoMode: 'tile',
     logoSrc: '/assets/star_storm_logo_64x64.png'
   },
@@ -66,11 +66,11 @@ Page({
     this.ctx = null;
     this.logoImg = null;
 
-    // 记住用户对图片水印的开关与位置选择
+    // 记住用户对图片水印的开关与位置选择（默认关闭，仅用户显式开启过才为开）
     try {
       const savedMode = wx.getStorageSync('herocard-logo-wm-mode');
       this.setData({
-        logoWatermark: wx.getStorageSync('herocard-logo-wm') !== 'off',
+        logoWatermark: wx.getStorageSync('herocard-logo-wm') === 'on',
         logoMode: savedMode === 'corner' ? 'corner' : 'tile'
       });
     } catch (e) { /* 保持默认 */ }
@@ -90,10 +90,19 @@ Page({
   /* ---------- 图片水印 ---------- */
 
   loadDefaultLogo() {
-    // 包内默认 logo：assets/star_storm_logo_64x64.png（不存在时静默禁用）
-    canvasUtil.loadImage(this.canvas, '/assets/star_storm_logo_64x64.png')
-      .then((img) => { this.logoImg = img; this.renderNow(); })
-      .catch(() => { /* 无默认图时不启用 */ });
+    // 包内默认 logo。真机 canvas.createImage() 不支持代码包路径，
+    // 需先读为 base64 再以 data URL 方式加载；失败静默禁用。
+    const path = '/assets/star_storm_logo_64x64.png';
+    wx.getFileSystemManager().readFile({
+      filePath: path,
+      encoding: 'base64',
+      success: (res) => {
+        canvasUtil.loadImage(this.canvas, 'data:image/png;base64,' + res.data)
+          .then((img) => { this.logoImg = img; this.renderNow(); })
+          .catch(() => { /* 解码失败不启用 */ });
+      },
+      fail: () => { /* 无默认图不启用 */ }
+    });
   },
 
   onLogoWatermarkToggle(event) {
