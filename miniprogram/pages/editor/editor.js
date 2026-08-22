@@ -23,7 +23,7 @@ Page({
     hasPhotoB: false,
     logoWatermark: false,
     logoMode: 'tile',
-    logoSrc: '/assets/star_storm_logo_64x64.png'
+    logoSrc: ''
   },
 
   onLoad(options) {
@@ -90,14 +90,16 @@ Page({
   /* ---------- 图片水印 ---------- */
 
   loadDefaultLogo() {
-    // 包内默认 logo。真机 canvas.createImage() 不支持代码包路径，
-    // 需先读为 base64 再以 data URL 方式加载；失败静默禁用。
+    // 包内默认 logo。真机 image 组件与 canvas.createImage() 对代码包路径
+    // 支持均不可靠，统一读为 base64 data URL：缩略图显示与 canvas 绘制同源。
     const path = '/assets/star_storm_logo_64x64.png';
     wx.getFileSystemManager().readFile({
       filePath: path,
       encoding: 'base64',
       success: (res) => {
-        canvasUtil.loadImage(this.canvas, 'data:image/png;base64,' + res.data)
+        const dataUrl = 'data:image/png;base64,' + res.data;
+        this.setData({ logoSrc: dataUrl });
+        canvasUtil.loadImage(this.canvas, dataUrl)
           .then((img) => { this.logoImg = img; this.renderNow(); })
           .catch(() => { /* 解码失败不启用 */ });
       },
@@ -120,18 +122,30 @@ Page({
     this.renderNow();
   },
 
-  /** 点击缩略图放大预览（包内路径需先拷贝为本地文件） */
+  /** 点击缩略图放大预览（data URL 写临时文件 / 包内路径拷贝临时文件） */
   onPreviewLogo() {
     const src = this.data.logoSrc;
+    const dest = wx.env.USER_DATA_PATH + '/logo-preview.png';
+    const fsm = wx.getFileSystemManager();
+    const preview = () => wx.previewImage({ urls: [dest] });
+    if (src.indexOf('data:') === 0) {
+      fsm.writeFile({
+        filePath: dest,
+        data: src.split(',')[1],
+        encoding: 'base64',
+        success: preview,
+        fail: () => wx.showToast({ title: '预览失败', icon: 'none' })
+      });
+      return;
+    }
     if (src.indexOf('tmp') > -1 || src.indexOf('wxfile') > -1) {
       wx.previewImage({ urls: [src] });
       return;
     }
-    const dest = wx.env.USER_DATA_PATH + '/logo-preview.png';
-    wx.getFileSystemManager().copyFile({
+    fsm.copyFile({
       srcPath: src,
       destPath: dest,
-      success: () => wx.previewImage({ urls: [dest] }),
+      success: preview,
       fail: () => wx.showToast({ title: '预览失败', icon: 'none' })
     });
   },
