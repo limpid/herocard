@@ -21,7 +21,9 @@ Page({
     hasPhoto: false,
     hasPhotoA: false,
     hasPhotoB: false,
-    logoWatermark: true
+    logoWatermark: true,
+    logoMode: 'tile',
+    logoSrc: '/assets/star_storm_logo_64x64.png'
   },
 
   onLoad(options) {
@@ -64,10 +66,14 @@ Page({
     this.ctx = null;
     this.logoImg = null;
 
-    // 记住用户对图片水印的开关选择
+    // 记住用户对图片水印的开关与位置选择
     try {
-      this.setData({ logoWatermark: wx.getStorageSync('herocard-logo-wm') !== 'off' });
-    } catch (e) { /* 保持默认开 */ }
+      const savedMode = wx.getStorageSync('herocard-logo-wm-mode');
+      this.setData({
+        logoWatermark: wx.getStorageSync('herocard-logo-wm') !== 'off',
+        logoMode: savedMode === 'corner' ? 'corner' : 'tile'
+      });
+    } catch (e) { /* 保持默认 */ }
   },
 
   onReady() {
@@ -97,16 +103,41 @@ Page({
     this.renderNow();
   },
 
+  onLogoMode(event) {
+    const mode = event.currentTarget.dataset.mode;
+    if (mode === this.data.logoMode) return;
+    this.setData({ logoMode: mode });
+    try { wx.setStorageSync('herocard-logo-wm-mode', mode); } catch (e) { /* 忽略 */ }
+    this.renderNow();
+  },
+
+  /** 点击缩略图放大预览（包内路径需先拷贝为本地文件） */
+  onPreviewLogo() {
+    const src = this.data.logoSrc;
+    if (src.indexOf('tmp') > -1 || src.indexOf('wxfile') > -1) {
+      wx.previewImage({ urls: [src] });
+      return;
+    }
+    const dest = wx.env.USER_DATA_PATH + '/logo-preview.png';
+    wx.getFileSystemManager().copyFile({
+      srcPath: src,
+      destPath: dest,
+      success: () => wx.previewImage({ urls: [dest] }),
+      fail: () => wx.showToast({ title: '预览失败', icon: 'none' })
+    });
+  },
+
   onChooseLogo() {
     wx.chooseMedia({
       count: 1,
       mediaType: ['image'],
       sizeType: ['original'],
       success: (res) => {
-        canvasUtil.loadImage(this.canvas, res.tempFiles[0].tempFilePath)
+        const tempPath = res.tempFiles[0].tempFilePath;
+        canvasUtil.loadImage(this.canvas, tempPath)
           .then((img) => {
             this.logoImg = img;
-            if (!this.data.logoWatermark) this.setData({ logoWatermark: true });
+            this.setData({ logoSrc: tempPath, logoWatermark: true });
             this.renderNow();
             wx.showToast({ title: '水印图片已更换', icon: 'none' });
           })
@@ -115,8 +146,15 @@ Page({
     });
   },
 
-  /** 在 900×1200 逻辑坐标系内平铺 -30° 图片水印（与文字水印风格一致） */
+  /** 在 900×1200 逻辑坐标系内绘制图片水印（tile=全图平铺 / corner=左上角） */
   drawImageWatermark(ctx, img) {
+    if (this.data.logoMode === 'corner') {
+      ctx.save();
+      ctx.globalAlpha = 0.22;
+      ctx.drawImage(img, 36, 36, 56, 56);
+      ctx.restore();
+      return;
+    }
     ctx.save();
     ctx.rotate(-Math.PI / 6);
     ctx.globalAlpha = 0.13;
