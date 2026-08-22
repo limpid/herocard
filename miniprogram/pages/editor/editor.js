@@ -99,15 +99,16 @@ Page({
       return;
     }
     const path = paths[index];
-    wx.getFileSystemManager().readFile({
-      filePath: path,
-      encoding: 'base64',
+    // 用 getImageInfo 加载（微信官方对代码包路径的标准支持方式；
+    // 部分环境 readFile 读包路径不可靠），返回的 res.path 可直接用于
+    // image 显示、previewImage 与 canvas 绘制。
+    wx.getImageInfo({
+      src: path,
       success: (res) => {
-        const dataUrl = 'data:image/png;base64,' + res.data;
-        canvasUtil.loadImage(this.canvas, dataUrl)
+        canvasUtil.loadImage(this.canvas, res.path)
           .then((img) => {
             this.logoImg = img;
-            this.setData({ logoSrc: dataUrl });
+            this.setData({ logoSrc: res.path });
             this.renderNow();
           })
           .catch((e) => {
@@ -202,20 +203,8 @@ Page({
       });
       return;
     }
-    // 真实 Logo（data URL）：写临时文件后预览
-    if (src.indexOf('data:') === 0) {
-      const dest = wx.env.USER_DATA_PATH + '/logo-preview.png';
-      wx.getFileSystemManager().writeFile({
-        filePath: dest,
-        data: src.split(',')[1],
-        encoding: 'base64',
-        success: () => wx.previewImage({ urls: [dest] }),
-        fail: () => wx.showToast({ title: '预览失败', icon: 'none' })
-      });
-      return;
-    }
-    // 自定义图（临时路径）
-    if (src.indexOf('tmp') > -1 || src.indexOf('wxfile') > -1) {
+    // 真实/自定义 Logo（本地路径）：直接预览
+    if (src) {
       wx.previewImage({ urls: [src] });
       return;
     }
