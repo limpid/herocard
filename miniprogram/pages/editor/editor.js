@@ -90,7 +90,27 @@ Page({
   /* ---------- 图片水印 ---------- */
 
   loadDefaultLogo() {
-    // 默认 logo 用离屏 canvas 实时绘制，零文件依赖（规避包内资源同步问题）
+    // 优先加载包内真实 Logo（assets/star_storm_logo_64x64.png，读为 base64 规避包路径限制）；
+    // 文件不存在或加载失败时，回退到离屏 canvas 绘制的内置星形 Logo。
+    const path = '/assets/star_storm_logo_64x64.png';
+    wx.getFileSystemManager().readFile({
+      filePath: path,
+      encoding: 'base64',
+      success: (res) => {
+        const dataUrl = 'data:image/png;base64,' + res.data;
+        canvasUtil.loadImage(this.canvas, dataUrl)
+          .then((img) => {
+            this.logoImg = img;
+            this.setData({ logoSrc: dataUrl });
+            this.renderNow();
+          })
+          .catch(() => this.useBuiltinLogo());
+      },
+      fail: () => this.useBuiltinLogo()
+    });
+  },
+
+  useBuiltinLogo() {
     this.setData({ logoSrc: 'default' });
     this.drawDefaultLogoToCanvas().then((img) => {
       this.logoImg = img;
@@ -161,8 +181,9 @@ Page({
 
   /** 点击缩略图放大预览 */
   onPreviewLogo() {
-    if (this.data.logoSrc === 'default' && this.logoImg) {
-      // 默认 logo：从离屏 canvas 生成临时文件再预览
+    const src = this.data.logoSrc;
+    // 内置 Logo：从离屏 canvas 生成临时文件预览
+    if (src === 'default' && this.logoImg) {
       const off = wx.createOffscreenCanvas({ type: '2d', width: 128, height: 128 });
       const c = off.getContext('2d');
       c.drawImage(this.logoImg, 0, 0, 128, 128);
@@ -173,19 +194,24 @@ Page({
       });
       return;
     }
-    // 自定义图：临时/包内路径直接预览
-    const src = this.data.logoSrc;
+    // 真实 Logo（data URL）：写临时文件后预览
+    if (src.indexOf('data:') === 0) {
+      const dest = wx.env.USER_DATA_PATH + '/logo-preview.png';
+      wx.getFileSystemManager().writeFile({
+        filePath: dest,
+        data: src.split(',')[1],
+        encoding: 'base64',
+        success: () => wx.previewImage({ urls: [dest] }),
+        fail: () => wx.showToast({ title: '预览失败', icon: 'none' })
+      });
+      return;
+    }
+    // 自定义图（临时路径）
     if (src.indexOf('tmp') > -1 || src.indexOf('wxfile') > -1) {
       wx.previewImage({ urls: [src] });
       return;
     }
-    const dest = wx.env.USER_DATA_PATH + '/logo-preview.png';
-    wx.getFileSystemManager().copyFile({
-      srcPath: src,
-      destPath: dest,
-      success: () => wx.previewImage({ urls: [dest] }),
-      fail: () => wx.showToast({ title: '预览失败', icon: 'none' })
-    });
+    wx.showToast({ title: 'Logo 加载中', icon: 'none' });
   },
 
   onChooseLogo() {

@@ -22,9 +22,9 @@
     "miniprogram": {
       "list": [
         {
-          "name": "pages/editor/editor",
-          "pathName": "pages/editor/editor",
-          "query": "g=single&t=classic",
+          "name": "",
+          "pathName": "pages/index/index",
+          "query": "",
           "scene": null,
           "launchMode": "default"
         }

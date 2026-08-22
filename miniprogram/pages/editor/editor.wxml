@@ -215,7 +215,8 @@
       <view class="field-label">图片水印</view>
       <view class="logo-row">
         <view class="logo-thumb" bindtap="onPreviewLogo">
-          <view class="logo-thumb-inner">S</view>
+          <image wx:if="{{logoSrc !== 'default' && logoSrc}}" class="logo-img" src="{{logoSrc}}" mode="aspectFit" />
+          <view wx:else class="logo-thumb-inner">S</view>
         </view>
         <view class="logo-actions">
           <switch checked="{{logoWatermark}}" bindchange="onLogoWatermarkToggle" color="#6e6ae9" />
