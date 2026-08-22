@@ -264,15 +264,21 @@
 .logo-thumb {
   width: 96rpx;
   height: 96rpx;
-  padding: 8rpx;
-  box-sizing: border-box;
-  border-radius: 12rpx;
-  /* 棋盘格底纹：透明/浅色水印图也能看清 */
-  background: #ffffff linear-gradient(45deg, #eef0f4 25%, transparent 25%, transparent 75%, #eef0f4 75%),
-              #ffffff linear-gradient(45deg, #eef0f4 25%, transparent 25%, transparent 75%, #eef0f4 75%);
-  background-size: 24rpx 24rpx;
-  background-position: 0 0, 12rpx 12rpx;
-  border: 1rpx solid #e2e1e9;
+  border-radius: 16rpx;
+  background: linear-gradient(135deg, #5d58db, #7b76ed);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1rpx solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 4rpx 12rpx rgba(91, 88, 219, 0.25);
+}
+
+.logo-thumb-inner {
+  font-size: 64rpx;
+  font-weight: 900;
+  color: #ffffff;
+  line-height: 1;
+  font-style: italic;
 }
 
 .logo-modes {

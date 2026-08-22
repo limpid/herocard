@@ -214,7 +214,9 @@
     <view class="field">
       <view class="field-label">图片水印</view>
       <view class="logo-row">
-        <image class="logo-thumb" src="{{logoSrc}}" mode="aspectFit" bindtap="onPreviewLogo" />
+        <view class="logo-thumb" bindtap="onPreviewLogo">
+          <view class="logo-thumb-inner">S</view>
+        </view>
         <view class="logo-actions">
           <switch checked="{{logoWatermark}}" bindchange="onLogoWatermarkToggle" color="#6e6ae9" />
           <view class="logo-change" bindtap="onChooseLogo">更换图片</view>

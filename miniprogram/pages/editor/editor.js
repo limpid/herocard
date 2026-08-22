@@ -90,20 +90,57 @@ Page({
   /* ---------- 图片水印 ---------- */
 
   loadDefaultLogo() {
-    // 包内默认 logo。真机 image 组件与 canvas.createImage() 对代码包路径
-    // 支持均不可靠，统一读为 base64 data URL：缩略图显示与 canvas 绘制同源。
-    const path = '/assets/star_storm_logo_64x64.png';
-    wx.getFileSystemManager().readFile({
-      filePath: path,
-      encoding: 'base64',
-      success: (res) => {
-        const dataUrl = 'data:image/png;base64,' + res.data;
-        this.setData({ logoSrc: dataUrl });
-        canvasUtil.loadImage(this.canvas, dataUrl)
-          .then((img) => { this.logoImg = img; this.renderNow(); })
-          .catch(() => { /* 解码失败不启用 */ });
-      },
-      fail: () => { /* 无默认图不启用 */ }
+    // 默认 logo 用离屏 canvas 实时绘制，零文件依赖（规避包内资源同步问题）
+    this.setData({ logoSrc: 'default' });
+    this.drawDefaultLogoToCanvas().then((img) => {
+      this.logoImg = img;
+      this.renderNow();
+    }).catch(() => { /* 绘制失败不启用 */ });
+  },
+
+  /** 离屏绘制星风暴风格 Logo（深紫圆角底 + 白色五角星），返回可绘制的 Image */
+  drawDefaultLogoToCanvas() {
+    return new Promise((resolve, reject) => {
+      try {
+        const off = wx.createOffscreenCanvas ? wx.createOffscreenCanvas({ type: '2d', width: 128, height: 128 }) : null;
+        if (!off) { reject(new Error('offscreen unsupported')); return; }
+        const c = off.getContext('2d');
+        // 深紫圆角底
+        c.fillStyle = '#5d58db';
+        c.beginPath();
+        const r = 20, x = 4, y = 4, w = 120, h = 120;
+        c.moveTo(x + r, y);
+        c.arcTo(x + w, y, x + w, y + h, r);
+        c.arcTo(x + w, y + h, x, y + h, r);
+        c.arcTo(x, y + h, x, y, r);
+        c.arcTo(x, y, x + w, y, r);
+        c.closePath();
+        c.fill();
+        // 白色描边
+        c.strokeStyle = 'rgba(255,255,255,0.5)';
+        c.lineWidth = 3;
+        c.stroke();
+        // 白色五角星
+        c.fillStyle = '#ffffff';
+        c.beginPath();
+        const cx = 64, cy = 60, R = 30, rr = 13;
+        for (let i = 0; i < 10; i += 1) {
+          const rad = (-90 + i * 36) * Math.PI / 180;
+          const rR = i % 2 === 0 ? R : rr;
+          const px = cx + rR * Math.cos(rad);
+          const py = cy + rR * Math.sin(rad);
+          if (i === 0) c.moveTo(px, py); else c.lineTo(px, py);
+        }
+        c.closePath();
+        c.fill();
+        // 离屏 canvas 转 data URL 再转 Image
+        const dataUrl = off.toDataURL ? off.toDataURL('image/png') : '';
+        if (dataUrl) {
+          canvasUtil.loadImage(this.canvas, dataUrl).then(resolve).catch(reject);
+        } else {
+          reject(new Error('no dataURL'));
+        }
+      } catch (e) { reject(e); }
     });
   },
 
@@ -122,30 +159,31 @@ Page({
     this.renderNow();
   },
 
-  /** 点击缩略图放大预览（data URL 写临时文件 / 包内路径拷贝临时文件） */
+  /** 点击缩略图放大预览 */
   onPreviewLogo() {
-    const src = this.data.logoSrc;
-    const dest = wx.env.USER_DATA_PATH + '/logo-preview.png';
-    const fsm = wx.getFileSystemManager();
-    const preview = () => wx.previewImage({ urls: [dest] });
-    if (src.indexOf('data:') === 0) {
-      fsm.writeFile({
-        filePath: dest,
-        data: src.split(',')[1],
-        encoding: 'base64',
-        success: preview,
+    if (this.data.logoSrc === 'default' && this.logoImg) {
+      // 默认 logo：从离屏 canvas 生成临时文件再预览
+      const off = wx.createOffscreenCanvas({ type: '2d', width: 128, height: 128 });
+      const c = off.getContext('2d');
+      c.drawImage(this.logoImg, 0, 0, 128, 128);
+      wx.canvasToTempFilePath({
+        canvas: off,
+        success: (res) => wx.previewImage({ urls: [res.tempFilePath] }),
         fail: () => wx.showToast({ title: '预览失败', icon: 'none' })
       });
       return;
     }
+    // 自定义图：临时/包内路径直接预览
+    const src = this.data.logoSrc;
     if (src.indexOf('tmp') > -1 || src.indexOf('wxfile') > -1) {
       wx.previewImage({ urls: [src] });
       return;
     }
-    fsm.copyFile({
+    const dest = wx.env.USER_DATA_PATH + '/logo-preview.png';
+    wx.getFileSystemManager().copyFile({
       srcPath: src,
       destPath: dest,
-      success: preview,
+      success: () => wx.previewImage({ urls: [dest] }),
       fail: () => wx.showToast({ title: '预览失败', icon: 'none' })
     });
   },
