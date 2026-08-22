@@ -250,23 +250,25 @@ Page({
     });
   },
 
-  /** 在 900×1200 逻辑坐标系内绘制图片水印（tile=全图平铺 / corner=左上角） */
+  /** 在 900×1200 逻辑坐标系内绘制图片水印（tile=全图平铺 / corner=左上角）
+   *  尺寸对齐文字水印节奏：文字字号 44px / 纵向间距约 141，
+   *  图片取 88px（2 倍字号，视觉体量与一行文字相当），间距同比例放大。 */
   drawImageWatermark(ctx, img) {
     if (this.data.logoMode === 'corner') {
       ctx.save();
-      ctx.globalAlpha = 0.22;
-      ctx.drawImage(img, 36, 36, 56, 56);
+      ctx.globalAlpha = 0.2;
+      ctx.drawImage(img, 36, 36, 88, 88);
       ctx.restore();
       return;
     }
     ctx.save();
     ctx.rotate(-Math.PI / 6);
-    ctx.globalAlpha = 0.13;
-    const size = 52;
-    const gapX = 210;
-    const gapY = 150;
-    for (let y = -1000; y < 2300; y += gapY) {
-      for (let x = -800; x < 1800; x += gapX) {
+    ctx.globalAlpha = 0.12;
+    const size = 88;
+    const gapX = 300;
+    const gapY = 200;
+    for (let y = -1100; y < 2400; y += gapY) {
+      for (let x = -900; x < 1900; x += gapX) {
         ctx.drawImage(img, x, y, size, size);
       }
     }
