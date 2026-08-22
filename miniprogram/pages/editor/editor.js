@@ -66,13 +66,10 @@ Page({
     this.ctx = null;
     this.logoImg = null;
 
-    // 记住用户对图片水印的开关与位置选择（默认关闭，仅用户显式开启过才为开）
+    // 图片水印开关：每次进入默认关闭（不记忆）；仅记忆位置选择
     try {
       const savedMode = wx.getStorageSync('herocard-logo-wm-mode');
-      this.setData({
-        logoWatermark: wx.getStorageSync('herocard-logo-wm') === 'on',
-        logoMode: savedMode === 'corner' ? 'corner' : 'tile'
-      });
+      this.setData({ logoMode: savedMode === 'corner' ? 'corner' : 'tile' });
     } catch (e) { /* 保持默认 */ }
   },
 
@@ -104,9 +101,15 @@ Page({
             this.setData({ logoSrc: dataUrl });
             this.renderNow();
           })
-          .catch(() => this.useBuiltinLogo());
+          .catch((e) => {
+            console.warn('[图片水印] 真实 Logo 解码失败，已回退内置 Logo：', e);
+            this.useBuiltinLogo();
+          });
       },
-      fail: () => this.useBuiltinLogo()
+      fail: (e) => {
+        console.warn('[图片水印] 未读取到 assets/star_storm_logo_64x64.png，已回退内置 Logo。请确认真实 Logo 已放入 miniprogram/assets/ 目录并重新编译：', e);
+        this.useBuiltinLogo();
+      }
     });
   },
 
@@ -167,7 +170,6 @@ Page({
   onLogoWatermarkToggle(event) {
     const on = event.detail.value;
     this.setData({ logoWatermark: on });
-    try { wx.setStorageSync('herocard-logo-wm', on ? 'on' : 'off'); } catch (e) { /* 忽略 */ }
     this.renderNow();
   },
 
