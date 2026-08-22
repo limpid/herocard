@@ -87,52 +87,22 @@ Page({
   /* ---------- 图片水印 ---------- */
 
   loadDefaultLogo() {
-    // 优先级：① 用户通过「更换图片」保存的 Logo（storage 持久化，最可靠）
-    //        ② 包内文件（getImageInfo，部分环境对包路径不可靠）
+    // 优先级：① 用户通过「更换图片」保存的 Logo
+    //        ② 构建时嵌入 JS 模块的真实 Logo（不依赖运行时包路径）
     //        ③ 内置绘制
+    let dataUrl = defaultLogoDataUrl;
     try {
       const saved = wx.getStorageSync('herocard-custom-logo');
-      if (saved) {
-        const dataUrl = 'data:image/png;base64,' + saved;
-        canvasUtil.loadImage(this.canvas, dataUrl)
-          .then((img) => {
-            this.logoImg = img;
-            this.setData({ logoSrc: dataUrl });
-            this.renderNow();
-          })
-          .catch(() => this.tryLoadLogo(['/assets/my-logo.png', '/assets/star_storm_logo_64x64.png'], 0));
-        return;
-      }
-    } catch (e) { /* 忽略，继续尝试包内文件 */ }
-    this.tryLoadLogo(['/assets/my-logo.png', '/assets/star_storm_logo_64x64.png'], 0);
-  },
+      if (saved) dataUrl = 'data:image/png;base64,' + saved;
+    } catch (e) { /* 使用构建内嵌 Logo */ }
 
-  tryLoadLogo(paths, index) {
-    if (index >= paths.length) {
-      console.warn('[图片水印] assets/ 下未找到 Logo 文件（my-logo.png 或 star_storm_logo_64x64.png），已使用内置 Logo');
-      this.useBuiltinLogo();
-      return;
-    }
-    const path = paths[index];
-    // 用 getImageInfo 加载（微信官方对代码包路径的标准支持方式；
-    // 部分环境 readFile 读包路径不可靠），返回的 res.path 可直接用于
-    // image 显示、previewImage 与 canvas 绘制。
-    wx.getImageInfo({
-      src: path,
-      success: (res) => {
-        canvasUtil.loadImage(this.canvas, res.path)
-          .then((img) => {
-            this.logoImg = img;
-            this.setData({ logoSrc: res.path });
-            this.renderNow();
-          })
-          .catch((e) => {
-            console.warn('[图片水印] Logo 解码失败，尝试下一个路径：', path, e);
-            this.tryLoadLogo(paths, index + 1);
-          });
-      },
-      fail: () => this.tryLoadLogo(paths, index + 1)
-    });
+    canvasUtil.loadImage(this.canvas, dataUrl)
+      .then((img) => {
+        this.logoImg = img;
+        this.setData({ logoSrc: dataUrl });
+        this.renderNow();
+      })
+      .catch(() => this.useBuiltinLogo());
   },
 
   useBuiltinLogo() {

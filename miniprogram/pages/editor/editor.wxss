@@ -5,15 +5,6 @@
   box-sizing: border-box;
 }
 
-/* 依赖标记（不可见）：仅为让构建工具收录 assets 下的 Logo 文件进包 */
-.dep-marker {
-  position: absolute;
-  width: 0;
-  height: 0;
-  opacity: 0;
-  pointer-events: none;
-}
-
 /* 预览区 */
 .preview-wrap {
   padding: 16rpx;
