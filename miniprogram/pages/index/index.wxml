@@ -28,7 +28,7 @@
       bindtap="onOpenTemplate"
     >
       <view class="card-usage {{item.usage > 0 ? '' : 'is-zero'}}">{{item.usage > 0 ? '已用 ' + item.usage + ' 次' : '未使用'}}</view>
-      <view class="card-index">{{index + 1 < 10 ? '0' : ''}}{{index + 1}}</view>
+      <view class="card-index">{{(index + 1 < 10 ? '0' : '') + (index + 1)}}</view>
       <view class="card-name">{{item.name}}</view>
       <view class="card-tagline">{{item.tagline}}</view>
       <view class="card-cta">去制作 →</view>

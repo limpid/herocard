@@ -2,7 +2,6 @@
   "description": "星风暴人物卡片生成器 · 微信小程序",
   "appid": "wx948c06410d3e1e7c",
   "compileType": "miniprogram",
-  "libVersion": "2.33.0",
   "setting": {
     "es6": true,
     "enhance": true,
