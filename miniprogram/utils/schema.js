@@ -1,6 +1,6 @@
 /** 模板清单（由 Web 端渲染器自动提取生成）+ 表单字段定义与默认值 */
 
-const templates = require('./templates.json');
+const templates = require('./templates.js');
 
 const groups = [
   { key: 'single', name: '单人介绍', desc: '一位明星的介绍卡片，突出形象与合作联系' },
