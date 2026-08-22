@@ -1,5 +1,6 @@
 const schema = require('../../utils/schema.js');
 const canvasUtil = require('../../utils/canvas.js');
+const defaultLogoDataUrl = require('../../utils/default-logo.js');
 
 const RENDER_DEBOUNCE = 280;
 
