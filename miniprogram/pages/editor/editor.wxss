@@ -155,7 +155,10 @@
 /* 配色 */
 .theme-row {
   display: flex;
-  gap: 18rpx;
+}
+
+.theme-dot + .theme-dot {
+  margin-left: 18rpx;
 }
 
 .theme-dot {
@@ -266,8 +269,7 @@
   right: 0;
   bottom: 0;
   display: flex;
-  padding: 18rpx 24rpx 18rpx;
-  padding-bottom: calc(18rpx + env(safe-area-inset-bottom));
+  padding: 18rpx 24rpx;
   background: rgba(255, 255, 255, 0.96);
   border-top: 1rpx solid #e8e7f0;
   box-shadow: 0 -6rpx 24rpx rgba(46, 43, 79, 0.06);

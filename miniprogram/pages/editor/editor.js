@@ -16,6 +16,7 @@ Page({
     sizeLabel: '1080 × 1440',
     cw: 320,
     ch: 427,
+    safeBottom: 0,
     form: {},
     hasPhoto: false,
     hasPhotoA: false,
@@ -35,6 +36,11 @@ Page({
     const cw = Math.round(info.windowWidth - insets);
     const ch = Math.round(cw * 4 / 3);
 
+    // 底部安全区（避免 calc 混合单位在真机失效，改为 JS 计算注入）
+    const safeBottom = info.safeArea
+      ? Math.max(info.screenHeight - info.safeArea.bottom, 0)
+      : 0;
+
     this.setData({
       group: group,
       tplKey: tplKey,
@@ -42,7 +48,8 @@ Page({
       tagline: meta.tagline,
       form: form,
       cw: cw,
-      ch: ch
+      ch: ch,
+      safeBottom: safeBottom
     });
     wx.setNavigationBarTitle({ title: meta.name + ' · 星风暴人物卡片生成器' });
 

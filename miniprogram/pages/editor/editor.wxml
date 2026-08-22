@@ -249,7 +249,7 @@
   <view class="site-footer">星风暴提供技术支持服务</view>
 
   <view class="actions-space"></view>
-  <view class="actions">
+  <view class="actions" style="padding-bottom: {{18 + safeBottom * 2}}rpx">
     <button class="btn-share" open-type="share">分享</button>
     <button class="btn-save" bindtap="onSave">保存到相册</button>
   </view>
