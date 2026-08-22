@@ -17,12 +17,13 @@ Page({
 
   onLoad(options) {
     // 支持从分享卡片直达：?g=compare&t=split-vs
+    // 延迟到下一事件循环再跳转：onLoad 中同步 redirectTo 会打断
+    // 页面生命周期状态机，触发 "LifeCycle.load fail" 框架错误
     if (options && options.g && options.t) {
       const list = schema.templates[options.g];
       if (list && list[options.t]) {
-        wx.redirectTo({
-          url: '/pages/editor/editor?g=' + options.g + '&t=' + options.t
-        });
+        const url = '/pages/editor/editor?g=' + options.g + '&t=' + options.t;
+        setTimeout(() => { wx.redirectTo({ url: url }); }, 0);
         return;
       }
     }
