@@ -81,11 +81,30 @@ const usage = {
 };
 
 App({
+  onLaunch(options) {
+    this.collectDroppedImages(options);
+  },
+
+  onShow(options) {
+    this.collectDroppedImages(options);
+  },
+
+  /** 收集拖入/聊天打开的图片（PC 拖拽场景 1173，forwardMaterials 携带文件路径） */
+  collectDroppedImages(options) {
+    if (options && options.forwardMaterials && options.forwardMaterials.length) {
+      const images = options.forwardMaterials
+        .filter((m) => m && m.path && String(m.type || '').indexOf('image') === 0)
+        .map((m) => m.path);
+      if (images.length) this.globalData.pendingImages = images;
+    }
+  },
+
   globalData: {
     env: {
       get: shim.__get,
       helpers: shim.__helpers
     },
-    usage: usage
+    usage: usage,
+    pendingImages: []
   }
 });

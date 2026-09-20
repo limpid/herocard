@@ -11,5 +11,13 @@
     "backgroundTextStyle": "dark"
   },
   "style": "v2",
-  "sitemapLocation": "sitemap.json"
+  "sitemapLocation": "sitemap.json",
+  "supportedMaterials": [
+    {
+      "materialType": "image/*",
+      "name": "用${nickname}制作卡片",
+      "desc": "拖入或从聊天打开图片，生成明星人物卡片",
+      "path": "pages/editor/editor"
+    }
+  ]
 }

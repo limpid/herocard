@@ -74,6 +74,11 @@ Page({
     this.ctx = null;
     this.logoImg = null;
 
+    // 接收拖入/聊天打开的图片（PC 拖拽场景），canvas 就绪后应用
+    const app = getApp();
+    this.pendingImagePaths = (app.globalData.pendingImages || []);
+    app.globalData.pendingImages = [];
+
     // 图片水印开关：每次进入默认关闭（不记忆）；仅记忆位置选择
     try {
       const savedMode = wx.getStorageSync('herocard-logo-wm-mode');
@@ -89,7 +94,23 @@ Page({
       this.ctx = res.canvas.getContext('2d');
       this.loadDefaultLogo();
       this.renderNow();
+      this.consumePendingImages();
     });
+  },
+
+  /** 应用拖入/从聊天打开的图片（PC 拖拽图片到小程序窗口，场景 1173） */
+  consumePendingImages() {
+    if (!this.pendingImagePaths || !this.pendingImagePaths.length) return;
+    const paths = this.pendingImagePaths;
+    this.pendingImagePaths = [];
+    if (this.data.group === 'compare') {
+      // 对比模板：第一张给 A、第二张给 B
+      if (paths[0]) this.applyPhoto('a', paths[0]);
+      if (paths[1]) this.applyPhoto('b', paths[1]);
+    } else if (paths[0]) {
+      this.applyPhoto('main', paths[0]);
+    }
+    wx.showToast({ title: '已应用拖入的图片', icon: 'none' });
   },
 
   /* ---------- 图片水印 ---------- */
@@ -450,30 +471,34 @@ Page({
       mediaType: ['image'],
       sizeType: ['original'],
       success: (res) => {
-        const tempPath = res.tempFiles[0].tempFilePath;
-        canvasUtil.loadImage(this.canvas, tempPath).then((image) => {
-          const fit = canvasUtil.smartFit(image);
-          if (slot === 'a') {
-            this.images.a = image;
-            this.data.form.zoomA = fit.zoom;
-            this.data.form.focusYA = fit.focusY;
-            this.setData({ hasPhotoA: true, 'form.zoomA': fit.zoom, 'form.focusYA': fit.focusY });
-          } else if (slot === 'b') {
-            this.images.b = image;
-            this.data.form.zoomB = fit.zoom;
-            this.data.form.focusYB = fit.focusY;
-            this.setData({ hasPhotoB: true, 'form.zoomB': fit.zoom, 'form.focusYB': fit.focusY });
-          } else {
-            this.images.main = image;
-            this.data.form.zoom = fit.zoom;
-            this.data.form.focusY = fit.focusY;
-            this.setData({ hasPhoto: true, 'form.zoom': fit.zoom, 'form.focusY': fit.focusY });
-          }
-          this.renderNow();
-        }).catch(() => {
-          wx.showToast({ title: '图片读取失败', icon: 'none' });
-        });
+        this.applyPhoto(slot, res.tempFiles[0].tempFilePath);
       }
+    });
+  },
+
+  /** 加载图片并应用到指定照片槽（选择/拖拽/聊天打开共用） */
+  applyPhoto(slot, tempPath) {
+    canvasUtil.loadImage(this.canvas, tempPath).then((image) => {
+      const fit = canvasUtil.smartFit(image);
+      if (slot === 'a') {
+        this.images.a = image;
+        this.data.form.zoomA = fit.zoom;
+        this.data.form.focusYA = fit.focusY;
+        this.setData({ hasPhotoA: true, 'form.zoomA': fit.zoom, 'form.focusYA': fit.focusY });
+      } else if (slot === 'b') {
+        this.images.b = image;
+        this.data.form.zoomB = fit.zoom;
+        this.data.form.focusYB = fit.focusY;
+        this.setData({ hasPhotoB: true, 'form.zoomB': fit.zoom, 'form.focusYB': fit.focusY });
+      } else {
+        this.images.main = image;
+        this.data.form.zoom = fit.zoom;
+        this.data.form.focusY = fit.focusY;
+        this.setData({ hasPhoto: true, 'form.zoom': fit.zoom, 'form.focusY': fit.focusY });
+      }
+      this.renderNow();
+    }).catch(() => {
+      wx.showToast({ title: '图片读取失败', icon: 'none' });
     });
   },
 
