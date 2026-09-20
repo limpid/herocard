@@ -47,10 +47,11 @@ Page({
     const map = schema.templates[group];
     const meta = map[tplKey] || { name: '经典图文', tagline: '' };
 
-    // 表单：与草稿同模板时恢复已编辑文字（含拖图 reLaunch 不丢内容）
-    const sameAsDraft = draft && draft.group === group && draft.tplKey === tplKey && draft.form;
-    const form = sameAsDraft
-      ? this.mergeDraftForm(group, draft.form)
+    // 表单：有草稿即继承——同分类完整继承，跨分类继承同名文本字段
+    const draftValid = draft && draft.form
+      && schema.templates[draft.group] && schema.templates[draft.group][draft.tplKey];
+    const form = draftValid
+      ? this.mergeDraftForm(group, draft.form, draft.group)
       : JSON.parse(JSON.stringify(schema.defaults[group]));
 
     // 点击进入模板即记一次使用（本地立即、后端异步上报，失败不影响使用）
@@ -85,7 +86,7 @@ Page({
         selected: key === tplKey
       }))
     };
-    if (sameAsDraft) {
+    if (draftValid) {
       patch.themeKey = draft.themeKey || 'lavender';
       if (schema.sizeOptions.some((s) => s.key === draft.sizeKey)) {
         patch.sizeKey = draft.sizeKey;
@@ -113,9 +114,24 @@ Page({
     } catch (e) { /* 保持默认 */ }
   },
 
-  /** 草稿表单与默认结构安全合并（防 schema 变更后老草稿缺字段/类型不符） */
-  mergeDraftForm(group, draftForm) {
+  /** 草稿表单与默认结构安全合并（防 schema 变更后老草稿缺字段/类型不符）
+   *  同分类：完整继承；跨分类：仅继承同名的文本字段（联系方式/水印/底部说明等共有项），
+   *  结构差异字段（items/rows/columns/对比 A-B 字段等）与照片相关数值不继承。 */
+  mergeDraftForm(group, draftForm, draftGroup) {
     const base = JSON.parse(JSON.stringify(schema.defaults[group]));
+
+    if (draftGroup && draftGroup !== group) {
+      // 跨分类：仅同名文本字段
+      Object.keys(base).forEach((key) => {
+        const value = draftForm[key];
+        if (typeof value === 'string' && typeof base[key] === 'string') {
+          base[key] = value;
+        }
+      });
+      return base;
+    }
+
+    // 同分类：完整安全合并
     Object.keys(base).forEach((key) => {
       const value = draftForm[key];
       if (value === undefined || value === null) return;
