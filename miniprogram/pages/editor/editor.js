@@ -97,6 +97,8 @@ Page({
     wx.setNavigationBarTitle({ title: meta.name + ' · 星风暴人物卡片生成器' });
 
     this.images = { main: null, a: null, b: null };
+    this.photoPaths = { main: null, a: null, b: null };
+    this.draftPhotos = draftValid ? (draft.photos || {}) : {};
     this.renderTimer = null;
     this.canvas = null;
     this.ctx = null;
@@ -170,6 +172,7 @@ Page({
         themeKey: this.data.themeKey,
         sizeKey: this.data.sizeKey,
         form: this.data.form,
+        photos: this.photoPaths || {},
         savedAt: Date.now()
       });
     } catch (e) { /* 忽略 */ }
@@ -183,19 +186,45 @@ Page({
       this.ctx = res.canvas.getContext('2d');
       this.loadDefaultLogo();
       this.renderNow();
-      this.consumePendingImages();
+      // 先恢复草稿照片，完成后再应用拖入图片（保证分槽判断基于已恢复状态）
+      this.restorePhotos().then(() => {
+        if (this.unloaded) return;
+        this.renderNow();
+        this.consumePendingImages();
+      });
     });
   },
 
-  /** 应用拖入/从聊天打开的图片（PC 拖拽图片到小程序窗口，场景 1173） */
+  /** 从草稿恢复照片（USER_DATA_PATH 持久文件），返回 Promise */
+  restorePhotos() {
+    const photos = this.draftPhotos || {};
+    const jobs = [];
+    ['main', 'a', 'b'].forEach((slot) => {
+      const p = photos[slot];
+      if (!p) return;
+      jobs.push(canvasUtil.loadImage(this.canvas, p).then((image) => {
+        this.images[slot] = image;
+        this.photoPaths[slot] = p; // 回填路径，保证后续 saveDraft 不丢失已恢复的照片
+        if (slot === 'a') this.setData({ hasPhotoA: true });
+        else if (slot === 'b') this.setData({ hasPhotoB: true });
+        else this.setData({ hasPhoto: true });
+      }).catch(() => { /* 文件失效（被清理/降级的临时路径重启后不可用）则忽略 */ }));
+    });
+    return Promise.all(jobs);
+  },
+
+  /** 应用拖入/从聊天打开的图片（PC 拖拽图片到小程序窗口，场景 1173）
+   *  compare 模板智能分槽：A 空给 A，A 已有则给 B（拖第二张作为 B 图） */
   consumePendingImages() {
     if (!this.pendingImagePaths || !this.pendingImagePaths.length) return;
     const paths = this.pendingImagePaths;
     this.pendingImagePaths = [];
     if (this.data.group === 'compare') {
-      // 对比模板：第一张给 A、第二张给 B
-      if (paths[0]) this.applyPhoto('a', paths[0]);
-      if (paths[1]) this.applyPhoto('b', paths[1]);
+      const targets = [];
+      if (!this.images.a) targets.push('a');
+      if (!this.images.b) targets.push('b');
+      if (!targets.length) targets.push('a'); // A、B 均已有则覆盖 A
+      paths.slice(0, 2).forEach((p, i) => this.applyPhoto(targets[i] || 'a', p));
     } else if (paths[0]) {
       this.applyPhoto('main', paths[0]);
     }
@@ -397,6 +426,11 @@ Page({
     this.saveDraft();
   },
 
+  /** Home 键返回主页等场景兜底保存（此时 onUnload 不一定触发） */
+  onHide() {
+    this.saveDraft();
+  },
+
   /* ---------- 数据组装（与 Web 端编辑器逻辑一致） ---------- */
 
   buildData() {
@@ -568,7 +602,7 @@ Page({
     });
   },
 
-  /** 加载图片并应用到指定照片槽（选择/拖拽/聊天打开共用） */
+  /** 加载图片并应用到指定照片槽（选择/拖拽/聊天打开共用），并持久化到用户目录 */
   applyPhoto(slot, tempPath) {
     canvasUtil.loadImage(this.canvas, tempPath).then((image) => {
       const fit = canvasUtil.smartFit(image);
@@ -589,8 +623,26 @@ Page({
         this.setData({ hasPhoto: true, 'form.zoom': fit.zoom, 'form.focusY': fit.focusY });
       }
       this.renderNow();
+      this.persistPhoto(slot, tempPath);
     }).catch(() => {
       wx.showToast({ title: '图片读取失败', icon: 'none' });
+    });
+  },
+
+  /** 照片写入用户持久目录（重启/Home 退出后可恢复）；失败降级记录临时路径 */
+  persistPhoto(slot, tempPath) {
+    const dest = wx.env.USER_DATA_PATH + '/photo-' + slot + '.png';
+    wx.getFileSystemManager().copyFile({
+      filePath: tempPath,
+      destPath: dest,
+      success: () => {
+        this.photoPaths[slot] = dest;
+        this.saveDraft();
+      },
+      fail: () => {
+        this.photoPaths[slot] = tempPath;
+        this.saveDraft();
+      }
     });
   },
 
