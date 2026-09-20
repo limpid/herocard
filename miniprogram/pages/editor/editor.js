@@ -30,11 +30,28 @@ Page({
   },
 
   onLoad(options) {
-    const group = schema.groups.some((g) => g.key === options.g) ? options.g : 'single';
+    // 确定模板：显式参数优先；无参数（PC 拖图 reLaunch 等）或同模板重进时恢复草稿
+    let group = schema.groups.some((g) => g.key === options.g) ? options.g : null;
+    let tplKey = group && schema.templates[group][options.t] ? options.t : null;
+    let draft = null;
+    try { draft = wx.getStorageSync('herocard-draft') || null; } catch (e) { /* 忽略 */ }
+
+    // 无参数进入：恢复上次编辑的模板（拖图场景——在哪个模板拖图就回到哪个模板）
+    if (!group && draft && schema.templates[draft.group] && schema.templates[draft.group][draft.tplKey]) {
+      group = draft.group;
+      tplKey = draft.tplKey;
+    }
+    if (!group) group = 'single';
+    if (!tplKey) tplKey = Object.keys(schema.templates[group])[0];
+
     const map = schema.templates[group];
-    const tplKey = map && map[options.t] ? options.t : Object.keys(map || { classic: 1 })[0];
     const meta = map[tplKey] || { name: '经典图文', tagline: '' };
-    const form = JSON.parse(JSON.stringify(schema.defaults[group]));
+
+    // 表单：与草稿同模板时恢复已编辑文字（含拖图 reLaunch 不丢内容）
+    const sameAsDraft = draft && draft.group === group && draft.tplKey === tplKey && draft.form;
+    const form = sameAsDraft
+      ? this.mergeDraftForm(group, draft.form)
+      : JSON.parse(JSON.stringify(schema.defaults[group]));
 
     // 点击进入模板即记一次使用（本地立即、后端异步上报，失败不影响使用）
     getApp().globalData.usage.record(group, tplKey);
@@ -51,7 +68,8 @@ Page({
       ? Math.max(info.screenHeight - info.safeArea.bottom, 0)
       : 0;
 
-    this.setData({
+    // 水印开关默认关闭（不跨会话记忆）
+    const patch = {
       group: group,
       tplKey: tplKey,
       tplName: meta.name,
@@ -60,12 +78,21 @@ Page({
       cw: cw,
       ch: ch,
       safeBottom: safeBottom,
+      logoWatermark: false,
       groupTemplates: Object.keys(map).map((key) => ({
         key: key,
         name: map[key].name,
         selected: key === tplKey
       }))
-    });
+    };
+    if (sameAsDraft) {
+      patch.themeKey = draft.themeKey || 'lavender';
+      if (schema.sizeOptions.some((s) => s.key === draft.sizeKey)) {
+        patch.sizeKey = draft.sizeKey;
+        patch.sizeLabel = draft.sizeKey.split('x').join(' × ');
+      }
+    }
+    this.setData(patch);
     wx.setNavigationBarTitle({ title: meta.name + ' · 星风暴人物卡片生成器' });
 
     this.images = { main: null, a: null, b: null };
@@ -79,11 +106,57 @@ Page({
     this.pendingImagePaths = (app.globalData.pendingImages || []);
     app.globalData.pendingImages = [];
 
-    // 图片水印开关：每次进入默认关闭（不记忆）；仅记忆位置选择
+    // 仅记忆图片水印位置选择
     try {
       const savedMode = wx.getStorageSync('herocard-logo-wm-mode');
       this.setData({ logoMode: savedMode === 'corner' ? 'corner' : 'tile' });
     } catch (e) { /* 保持默认 */ }
+  },
+
+  /** 草稿表单与默认结构安全合并（防 schema 变更后老草稿缺字段/类型不符） */
+  mergeDraftForm(group, draftForm) {
+    const base = JSON.parse(JSON.stringify(schema.defaults[group]));
+    Object.keys(base).forEach((key) => {
+      const value = draftForm[key];
+      if (value === undefined || value === null) return;
+      if (key === 'items' && Array.isArray(value) && value.length === base.items.length) {
+        base.items = value.map((item, i) => ({
+          name: (item && item.name) || base.items[i].name,
+          price: (item && item.price) || base.items[i].price
+        }));
+        return;
+      }
+      if (key === 'rows' && Array.isArray(value) && value.length >= 4 && value.length <= 16) {
+        base.rows = value.map((row) => ({
+          a: (row && row.a) || '',
+          b: (row && row.b) || '',
+          c: (row && row.c) || ''
+        }));
+        return;
+      }
+      if (key === 'columns' && Array.isArray(value) && value.length === 3) {
+        base.columns = value.map((col, i) => col || base.columns[i]);
+        return;
+      }
+      if (typeof value === typeof base[key] && !Array.isArray(base[key])) {
+        base[key] = value;
+      }
+    });
+    return base;
+  },
+
+  /** 编辑状态实时持久化（拖图 reLaunch / 重新进入同模板时可恢复） */
+  saveDraft() {
+    try {
+      wx.setStorageSync('herocard-draft', {
+        group: this.data.group,
+        tplKey: this.data.tplKey,
+        themeKey: this.data.themeKey,
+        sizeKey: this.data.sizeKey,
+        form: this.data.form,
+        savedAt: Date.now()
+      });
+    } catch (e) { /* 忽略 */ }
   },
 
   onReady() {
@@ -305,6 +378,7 @@ Page({
   onUnload() {
     this.unloaded = true;
     clearTimeout(this.renderTimer);
+    this.saveDraft();
   },
 
   /* ---------- 数据组装（与 Web 端编辑器逻辑一致） ---------- */
@@ -394,7 +468,9 @@ Page({
   /* ---------- 渲染 ---------- */
 
   renderNow() {
-    if (!this.canvas || !this.ctx || this.unloaded) return;
+    if (this.unloaded) return;
+    this.saveDraft();
+    if (!this.canvas || !this.ctx) return;
     const app = getApp();
     const env = app.globalData.env;
     this.renderTemplateTo(env.get(), env.helpers(), this.data.tplKey);
