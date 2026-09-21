@@ -9,14 +9,10 @@
 const shim = require('./utils/env.js');
 require('./vendor/index.js');
 
-/* ---------- 使用计数（原 utils/usage.js，网络失败不影响使用） ---------- */
+/* ---------- 使用计数（服务器为唯一事实源：失败必补发，本地仅缓存快照） ---------- */
 const API_URL = 'https://www.jxynstar.com/mp-api/usage';
-const LOCAL_KEY = 'herocard-usage-local';
-const REMOTE_KEY = 'herocard-usage-remote';
-
-function readLocal() {
-  try { return wx.getStorageSync(LOCAL_KEY) || {}; } catch (e) { return {}; }
-}
+const REMOTE_KEY = 'herocard-usage-remote';   // 服务器数据快照（显示用）
+const OUTBOX_KEY = 'herocard-usage-outbox';   // 待上报队列（网络失败必补发）
 
 function readRemote() {
   try { return wx.getStorageSync(REMOTE_KEY) || {}; } catch (e) { return {}; }
@@ -26,39 +22,65 @@ function writeRemote(map) {
   try { wx.setStorageSync(REMOTE_KEY, map); } catch (e) { /* 忽略 */ }
 }
 
+function readOutbox() {
+  try { return wx.getStorageSync(OUTBOX_KEY) || []; } catch (e) { return []; }
+}
+
+function writeOutbox(list) {
+  try { wx.setStorageSync(OUTBOX_KEY, list.slice(-500)); } catch (e) { /* 忽略 */ }
+}
+
 const usage = {
-  /** 显示计数：后端全局数优先，本地数兜底 */
+  flushing: false,
+
+  /** 显示计数：只以服务器数据快照为准（快照来自上报响应/全量拉取） */
   display: function (group, tpl) {
-    const key = group + ':' + tpl;
     const remote = readRemote();
-    if (remote[key] !== undefined) return remote[key];
-    return readLocal()[key] || 0;
+    return remote[group + ':' + tpl] || 0;
   },
 
-  /** 记录一次使用：本地立即 +1，异步上报后端（失败静默） */
+  /** 记录一次使用：入待上报队列并立即尝试上报（失败留队列，之后必补发到服务器） */
   record: function (group, tpl) {
-    const key = group + ':' + tpl;
-    const local = readLocal();
-    local[key] = (local[key] || 0) + 1;
-    try { wx.setStorageSync(LOCAL_KEY, local); } catch (e) { /* 忽略 */ }
-
-    wx.request({
-      url: API_URL,
-      method: 'POST',
-      data: { group: group, tpl: tpl },
-      timeout: 4000,
-      success: function (res) {
-        if (res.statusCode === 200 && res.data && res.data.ok) {
-          const remote = readRemote();
-          remote[key] = res.data.count;
-          writeRemote(remote);
-        }
-      },
-      fail: function () { /* 网络失败不影响使用 */ }
-    });
+    const outbox = readOutbox();
+    outbox.push({ group: group, tpl: tpl });
+    writeOutbox(outbox);
+    this.flushOutbox();
   },
 
-  /** 拉取后端全量计数（成功写缓存，失败返回 null） */
+  /** 串行上报队列：逐条发送，成功一条出队一条；失败停止等下次触发（record/fetchAll） */
+  flushOutbox: function () {
+    if (this.flushing) return;
+    const self = this;
+    const send = function () {
+      const outbox = readOutbox();
+      if (!outbox.length) { self.flushing = false; return; }
+      const item = outbox[0];
+      wx.request({
+        url: API_URL,
+        method: 'POST',
+        data: { group: item.group, tpl: item.tpl },
+        timeout: 4000,
+        success: function (res) {
+          if (res.statusCode === 200 && res.data && res.data.ok) {
+            const queue = readOutbox();
+            queue.shift(); // 上报成功才出队
+            writeOutbox(queue);
+            const remote = readRemote();
+            remote[item.group + ':' + item.tpl] = res.data.count;
+            writeRemote(remote);
+            send(); // 继续下一条
+          } else {
+            self.flushing = false;
+          }
+        },
+        fail: function () { self.flushing = false; }
+      });
+    };
+    this.flushing = true;
+    send();
+  },
+
+  /** 拉取服务器全量计数（成功更新快照并补发积压队列，失败返回 null） */
   fetchAll: function () {
     return new Promise(function (resolve) {
       wx.request({
@@ -69,6 +91,7 @@ const usage = {
           if (res.statusCode === 200 && res.data && res.data.ok) {
             const map = res.data.data || {};
             writeRemote(map);
+            usage.flushOutbox(); // 网络已通，补发积压
             resolve(map);
           } else {
             resolve(null);
